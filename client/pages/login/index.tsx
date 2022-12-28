@@ -43,7 +43,7 @@ const Login = () => {
           <br />
           <br />
           <button
-            className="w-full rounded-sm capitalize px-4 py-2 text-sm font-semibold bg-green-500 text-white hover:bg-indigo-900 transition"
+            className="w-full rounded-sm capitalize px-4 py-2 font-semibold bg-green-500 text-white hover:bg-indigo-900 transition"
             type="submit"
           >
             log in
