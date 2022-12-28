@@ -13,7 +13,33 @@ const Login = () => {
       </section>
 
       {/* bottom */}
-      <section></section>
+      <section>
+        <form className="w-3/4 mx-auto mt-10">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            className="border rounded-sm w-full hover:border-red-600 outline-none p-3"
+            placeholder="Email"
+          />
+          <br />
+          <br />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className="border rounded-sm w-full hover:border-red-600 outline-none p-3"
+            placeholder="Password"
+          />
+          <br />
+          <br />
+          <input
+            type="submit"
+            value="log in"
+            className="w-full rounded-sm uppercase px-4 py-3 bg-red-600 text-white"
+          />
+        </form>
+      </section>
     </main>
   );
 };
