@@ -12,6 +12,9 @@ module.exports = {
         primary: colors.green[500],
         secondary: colors.indigo[900],
       },
+      screens: {
+        xs: "425px",
+      },
     },
   },
   plugins: [],
