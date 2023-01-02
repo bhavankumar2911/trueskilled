@@ -28,7 +28,7 @@ const CompleteProfile = () => {
       {/* bottom */}
       <section className="sm:col-span-2 sm:h-screen sm:flex sm:max-h-screen sm:overflow-y-scroll sm:px-3">
         <Wrapper>
-          <form className="md:w-3/4 mx-auto sm:pb-10">
+          <form className="md:w-3/4 mx-auto sm:pb-10 max-w-[500px]">
             <h2 className="text-gray-800 hidden sm:block font-bold text-3xl mb-10">
               Complete your profile
             </h2>
