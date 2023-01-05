@@ -1,13 +1,12 @@
 import React, { FC } from "react";
 import SectionCard from "../SectionCard";
 import SectionTitle from "../SectionTitle";
-import Props from "./Props";
 
-const About: FC<Props> = ({ description }) => {
+const About: FC<{ about: string }> = ({ about }) => {
   return (
-    <SectionCard>
+    <SectionCard editAccount>
       <SectionTitle>About</SectionTitle>
-      <p className="text-justify">{description}</p>
+      <p className="text-justify">{about}</p>
     </SectionCard>
   );
 };
