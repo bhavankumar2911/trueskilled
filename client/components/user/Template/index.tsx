@@ -4,29 +4,20 @@ import About from "../About";
 import Info from "../Info";
 import Projects from "../Projects";
 
-interface IProps {
-  name: string;
-  username: string;
-  skills: string[];
-  about: string;
-  projects: unknown[];
-}
-
-const UserPageLayout: FC<IProps> = ({
-  name,
-  username,
-  skills,
-  about,
-  projects,
-}) => {
+const UserPageLayout: FC = () => {
   return (
     <main className="bg-gray-50 min-h-screen">
       <Wrapper>
-        <Info name={name} username={username} skills={skills} />
+        <div className="sm:grid sm:grid-cols-2 sm:gap-10 md-lg:grid-cols-3">
+          <div className="sm:col-span-1 md-lg:col-span-1">
+            <Info />
+            <About />
+          </div>
 
-        <About about={about} />
-
-        <Projects projects={projects} editProject />
+          <div className="sm:col-span-1 md-lg:col-span-2">
+            <Projects />
+          </div>
+        </div>
       </Wrapper>
     </main>
   );

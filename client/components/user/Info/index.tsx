@@ -1,16 +1,17 @@
 import React, { FC } from "react";
+import { useAppContext } from "../../../providers/App";
+import { useUserContext } from "../../../providers/User";
 import Avatar from "../../utils/Avatar";
 import SectionCard from "../SectionCard";
 
-interface Props {
-  name: string;
-  username: string;
-  skills: string[];
-}
+const InfoCard: FC = () => {
+  const { name, username, skills } = useUserContext();
+  const { user } = useAppContext();
 
-const InfoCard: FC<Props> = ({ name, username, skills }) => {
+  const editAccount = user ? (user.username == username ? true : false) : false;
+
   return (
-    <SectionCard editAccount>
+    <SectionCard editAccount={editAccount}>
       <Avatar src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
       <h2 className="font-bold text-xl">{name}</h2>
       <p className="text-gray-500 text-sm">@{username}</p>
