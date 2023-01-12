@@ -3,9 +3,15 @@ import { createContext } from "react";
 import User from "../../interfaces/User";
 import reducer from "./reducer";
 
-const initialUserState: User = {
+export interface State extends User {
+  avatar: string;
+}
+
+const initialUserState: State = {
   name: "john doe",
   username: "johndoe",
+  avatar:
+    "https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   skills: ["python", "java"],
   projects: [
     {
@@ -61,7 +67,7 @@ const initialUserState: User = {
     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero voluptatem debitis asperiores modi doloremque sunt voluptatibus illo hic nesciunt animi.",
 };
 
-const UserContext = createContext<User>(initialUserState);
+const UserContext = createContext<State>(initialUserState);
 
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);

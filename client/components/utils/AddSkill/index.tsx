@@ -1,55 +1,47 @@
-import React, { Fragment, useReducer } from "react";
+import React from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import Button from "../Button";
-import FormLabel from "../FormLabel";
 import Input from "../Input";
-import { Type } from "./Action";
-import reducer from "./reducer";
 
-const AddSkill = () => {
-  const [state, dispatch] = useReducer(reducer, { skill: "", skills: [] });
-  const { CHANGE_SKILL, ADD_SKILL, REMOVE_SKILL } = Type;
+interface Props {
+  skill: string;
+  editSkill: (value: string) => void;
+  addSkill: (value: string) => void;
+  skills: string[];
+  removeSkill: (value: string) => void;
+}
 
-  const addSkill: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
-    if (!!state.skill && !state.skills.includes(state.skill))
-      dispatch({ type: ADD_SKILL, payload: state.skill });
-    else dispatch({ type: CHANGE_SKILL, payload: "" });
-  };
-
-  const removeSkill = (skill: string) => {
-    dispatch({ type: REMOVE_SKILL, payload: skill.toLowerCase() });
-  };
-
+const SkillSelector: React.FC<Props> = ({
+  skill,
+  editSkill,
+  addSkill,
+  skills,
+  removeSkill,
+}) => {
   return (
-    <Fragment>
-      <FormLabel className="mb-0">Add your skills</FormLabel>
-      <br />
-      <small className="text-gray-400 text-xs mb-3 inline-block">
-        Hint: Press <span className="font-semibold">add</span> after entering
-        each skill
-      </small>
-      <div className="w-full flex items-start">
+    <div>
+      <div className="flex items-start">
         <Input
-          type="text"
-          className="rounded-tr-none rounded-br-none flex-1 hover:border-r-0"
-          value={state.skill}
-          onChange={(e) =>
-            dispatch({ type: CHANGE_SKILL, payload: e.target.value })
-          }
+          className="rounded-tr-none rounded-br-none mb-0 w-full"
+          value={skill}
+          onChange={(e) => editSkill(e.target.value)}
+          placeholder="Add your skills here"
         />
         <Button
-          className="border border-green-500 rounded-tl-none rounded-bl-none hover:border-secondary"
-          onClick={addSkill}
+          className="border border-primary rounded-tl-none rounded-bl-none hover:border-secondary m-0"
+          onClick={() => addSkill(skill)}
         >
           Add
         </Button>
       </div>
-      <ul className="flex flex-wrap mb-5">
-        {state.skills.map((skill, index) => (
+      <small className="text-gray-400">
+        Hint: Press Add after entering each skill
+      </small>
+      <ul className="flex flex-wrap mb-5 mt-3 gap-2">
+        {skills.map((skill, index) => (
           <li
             key={index}
-            className="bg-green-100 text-primary mx-1 px-3 py-1 rounded-sm flex items-center justify-between mb-2"
+            className="bg-green-100 text-primary px-3 py-1 rounded-sm flex items-center justify-between"
           >
             <span className="mb-1">{skill}</span>
             <span
@@ -61,8 +53,8 @@ const AddSkill = () => {
           </li>
         ))}
       </ul>
-    </Fragment>
+    </div>
   );
 };
 
-export default AddSkill;
+export default SkillSelector;

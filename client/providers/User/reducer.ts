@@ -1,4 +1,4 @@
-import User from "../../interfaces/User";
+import { State } from ".";
 
 // interface
 interface Action {
@@ -6,7 +6,7 @@ interface Action {
   payload: unknown;
 }
 
-export default (state: User, action: Action) => {
+export default (state: State, action: Action) => {
   const { type, payload } = action;
   switch (type) {
     default:
