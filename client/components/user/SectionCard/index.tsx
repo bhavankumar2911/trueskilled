@@ -3,7 +3,7 @@ import Props from "./Props";
 import { FaEdit } from "react-icons/fa";
 
 const SectionCard: FC<Props> = ({ children, editAccount, setShowModal }) => {
-  if (editAccount)
+  if (editAccount && setShowModal)
     return (
       <section className="rounded-sm shadow-gray-400/50 shadow-2xl border-t-primary p-10 bg-white mb-10">
         <div className="flex justify-end w-full">

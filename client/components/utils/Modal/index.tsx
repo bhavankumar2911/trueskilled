@@ -28,7 +28,7 @@ const Modal: FC<Props> = ({ children, title, showModal, setShowModal }) => {
       className="bg-[rgba(0,0,0,0.5)] fixed inset-0 z-20 flex items-center justify-center"
     >
       <div
-        className="bg-white w-11/12 p-5 rounded-sm max-h-[70vh] overflow-y-scroll"
+        className="bg-white w-11/12 p-5 rounded-sm max-h-[70vh] overflow-y-scroll max-w-[650px]"
         onClick={closeModal}
       >
         <div className="flex justify-between items-center mb-5 h-[50%]">

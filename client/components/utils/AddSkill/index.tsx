@@ -25,7 +25,7 @@ const SkillSelector: React.FC<Props> = ({
           className="rounded-tr-none rounded-br-none mb-0 w-full"
           value={skill}
           onChange={(e) => editSkill(e.target.value)}
-          placeholder="Add your skills here"
+          placeholder="Add your items here"
         />
         <Button
           className="border border-primary rounded-tl-none rounded-bl-none hover:border-secondary m-0"
@@ -35,7 +35,7 @@ const SkillSelector: React.FC<Props> = ({
         </Button>
       </div>
       <small className="text-gray-400">
-        Hint: Press Add after entering each skill
+        Hint: Press Add after entering each item
       </small>
       <ul className="flex flex-wrap mb-5 mt-3 gap-2">
         {skills.map((skill, index) => (
