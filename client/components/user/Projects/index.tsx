@@ -72,7 +72,7 @@ const Projects: FC = () => {
             showModal={showModal}
             setShowModal={setShowModal}
           >
-            <ProjectInput />
+            <ProjectInput edit={true} />
           </Modal>
         </div>
       );
@@ -87,7 +87,7 @@ const Projects: FC = () => {
               showModal={showModal}
               setShowModal={setShowModal}
             >
-              <ProjectInput />
+              <ProjectInput edit={true} />
             </Modal>
           </div>
           <ProjectList projects={projects} editProject={editProject} />
