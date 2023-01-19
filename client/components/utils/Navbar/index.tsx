@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Logo from "../Logo";
 import { BiMenuAltRight } from "react-icons/bi";
 import Wrapper from "../Wrapper";
-import Link from "next/link";
 import { HiOutlineHome } from "react-icons/hi2";
 import { GrClose } from "react-icons/gr";
 import NavLink from "../NavLink";
@@ -14,12 +13,12 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`bg-white fixed top-0 left-0 right-0 drop-shadow-lg ${
-          showLinks ? "h-auto" : "h-[100px]"
+        className={`bg-white fixed z-20 top-0 left-0 right-0 border-b ${
+          showLinks ? "h-auto" : "h-[70px]"
         }`}
       >
         <Wrapper className="!p-0 flex h-full">
-          <div className="w-full pt-8">
+          <div className="w-full pt-4">
             {/* mobile top */}
             <div className="flex items-center justify-between">
               <span>
@@ -76,7 +75,7 @@ const Navbar = () => {
           </div>
         </Wrapper>
       </nav>
-      <div className="h-[100px] border bg-green-50"></div>
+      <div className="h-[70px] border bg-green-50"></div>
     </>
   );
 };
