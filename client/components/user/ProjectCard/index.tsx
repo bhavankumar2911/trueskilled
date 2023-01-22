@@ -8,11 +8,16 @@ import { FaRegComment } from "react-icons/fa";
 export interface IProps {
   project: IProject;
   editProject: boolean;
+  className?: string;
 }
 
-const ProjectCard: FC<IProps> = ({ project, editProject }) => {
+const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
   return (
-    <li className="flex flex-col h-[260px] justify-between border pb-3 mt-5 first:m-0 hover:scale-105 transition-all w-full md:mt-0 max-w-[250px] rounded-sm overflow-hidden hover:bg-green-50 hover:border-primary">
+    <li
+      className={`flex flex-col h-[270px] justify-between border pb-3 mt-5 first:m-0 hover:scale-105 hover:drop-shadow-2xl transition-all w-full md:mt-0 max-w-[250px] rounded-sm overflow-hidden hover:bg-green-50 hover:border-primary ${
+        className ? className : ""
+      }`}
+    >
       <Link href={`/project/${project.id}`}>
         <div className="relative h-[150px]">
           <Image
@@ -22,13 +27,15 @@ const ProjectCard: FC<IProps> = ({ project, editProject }) => {
             className="object-cover"
           />
         </div>
-        <h3 className="font-semibold text-center mt-5 px-3">
-          {project.title.length < 35
-            ? project.title
-            : project.title.substring(0, 35) + "..."}
-        </h3>
+        <div className="flex items-center h-[77px]">
+          <h3 className="font-semibold text-center px-3">
+            {project.title.length < 35
+              ? project.title
+              : project.title.substring(0, 35) + "..."}
+          </h3>
+        </div>
       </Link>
-      <div className="mt-2 flex items-center justify-between px-3">
+      <div className="flex items-center justify-between px-3 border-t pt-2">
         <span className="flex items-center gap-1 text-sm cursor-pointer">
           <BsTriangle />
           <span>{project.upvotes}</span>

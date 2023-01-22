@@ -10,7 +10,7 @@ const Button: React.FC<Props> = ({
   onClick,
   href,
 }) => {
-  const classNames = `rounded-sm capitalize px-4 py-2 font-semibold bg-primary text-white hover:bg-secondary transition inline-flex gap-1 items-center ${
+  const classNames = `rounded-sm drop-shadow-2xl capitalize px-4 py-2 font-semibold bg-primary text-white hover:bg-secondary transition inline-flex gap-1 items-center ${
     block ? "w-full" : ""
   } ${className}`;
 

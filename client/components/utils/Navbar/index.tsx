@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`bg-white fixed z-20 top-0 left-0 right-0 border-b ${
+        className={`bg-white fixed z-20 top-0 left-0 right-0 border-b md:h-[70px] ${
           showLinks ? "h-auto" : "h-[70px]"
         }`}
       >
@@ -55,7 +55,9 @@ const Navbar = () => {
             </div>
             {/* mobile bottom */}
             <div
-              className={`py-5 text-center ${showLinks ? "block" : "hidden"}`}
+              className={`py-5 border-t text-center md:hidden mt-4 ${
+                showLinks ? "block" : "hidden"
+              }`}
             >
               <ul className="flex flex-col items-center">
                 <NavLink href="/">

@@ -20,7 +20,7 @@ const ProjectList: FC<{ projects: unknown[]; editProject: boolean }> = ({
   projects,
   editProject,
 }) => (
-  <ul className="flex justify-center w-full flex-col items-center gap-5 mt-10 sm:flex-row sm:flex-wrap md-lg:items-center md:gap-10 ">
+  <ul className="flex justify-center w-full flex-col items-center gap-5 mt-10 sm:flex-row sm:flex-wrap md-lg:items-center md:gap-10">
     {projects.map((project, index) => {
       console.log(project);
 
