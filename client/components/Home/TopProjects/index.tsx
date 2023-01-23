@@ -77,7 +77,7 @@ const TopProjects = () => {
         ))}
       </ul>
       <div className="flex justify-center mt-10">
-        <Button>
+        <Button href="/projects?page=1">
           all projects <IoIosShareAlt />
         </Button>
       </div>
