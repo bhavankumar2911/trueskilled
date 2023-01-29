@@ -2,6 +2,8 @@ import express, { ErrorRequestHandler } from "express";
 import createError from "http-errors";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import connection from "./db/connection";
+import authRouter from "./routes/auth";
 
 const app = express();
 
@@ -10,10 +12,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 
+// db connection
+connection();
+
 // api routes
-app.get("/", (req, res) => {
-  return res.send("Server is working!!!");
-});
+app.get("/auth", authRouter);
 
 // 404 api request
 app.use((req, res, next) => {
