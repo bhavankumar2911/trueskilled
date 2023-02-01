@@ -4,6 +4,7 @@ import successfulResponse from "../helpers/successfulResponse";
 import { checkExistingUser } from "../services/auth/checkExistingUser";
 import { hashPassword } from "../services/auth/hashPassword";
 import saveUserInDB from "../services/auth/saveUserInDB";
+import validateCompleteProfileData from "../services/auth/validateCompleteProfileData";
 import validateSignupData from "../services/auth/validateSignupData";
 
 export const signup: RequestHandler = async (req, res, next) => {
@@ -31,4 +32,16 @@ export const signup: RequestHandler = async (req, res, next) => {
       message: "Your account has been created",
     });
   else return next(createHttpError.InternalServerError());
+};
+
+export const completeProfile: RequestHandler = async (req, res, next) => {
+  const data = req.body;
+
+  const { isValid, message } = validateCompleteProfileData(data);
+
+  if (!isValid) return next(createHttpError.BadRequest(message));
+
+  return successfulResponse(res, {
+    message: "Profile information saved",
+  });
 };
