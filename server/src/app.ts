@@ -16,7 +16,7 @@ app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 connection();
 
 // api routes
-app.get("/auth", authRouter);
+app.use("/auth", authRouter);
 
 // 404 api request
 app.use((req, res, next) => {

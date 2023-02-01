@@ -18,7 +18,7 @@ export default (data: SignupData) => {
 
   // username validation
   else if (
-    !isAlpha(firstName, "en-US", { ignore: " " }) &&
+    !isAlpha(firstName, "en-US", { ignore: " " }) ||
     !isAlpha(lastName, "en-US", { ignore: " " })
   ) {
     validation.isValid = false;

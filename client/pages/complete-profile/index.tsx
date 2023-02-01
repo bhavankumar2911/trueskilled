@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import AddSkill from "../../components/utils/AddSkill";
 import Button from "../../components/utils/Button";
 import FormLabel from "../../components/utils/FormLabel";
@@ -7,8 +7,64 @@ import Input from "../../components/utils/Input";
 import Wrapper from "../../components/utils/Wrapper";
 import Avatar from "../../public/avatar.png";
 
+interface State {
+  skills: string[];
+  skill: string;
+}
+
+interface Action {
+  type: "ADD_SKILL" | "REMOVE_SKILL" | "EDIT_SKILL";
+  payload: string;
+}
+
+const reducer = (state: State, action: Action): State => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case "ADD_SKILL":
+      return {
+        ...state,
+        skills: [
+          ...(state.skills as string[]),
+          (payload as string).toLowerCase(),
+        ],
+        skill: "",
+      };
+
+    case "REMOVE_SKILL":
+      return {
+        ...state,
+        skills: [
+          ...(state.skills as string[]).filter((skill) => skill != payload),
+        ],
+      };
+
+    case "EDIT_SKILL":
+      return { ...state, skill: payload as string };
+    default:
+      return { ...state };
+  }
+};
+
+const initialState: State = {
+  skills: [],
+  skill: "",
+};
+
 const CompleteProfile = () => {
   const [profilePicture, setProfilePicture] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const addSkill = (skill: string) => {
+    if (skill && !state.skills.includes(skill))
+      return dispatch({ type: "ADD_SKILL", payload: state.skill });
+  };
+
+  const removeSkill = (skill: string) =>
+    dispatch({ type: "REMOVE_SKILL", payload: skill });
+
+  const editSkill = (skill: string) =>
+    dispatch({ type: "EDIT_SKILL", payload: skill });
 
   const handleFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files) {
@@ -56,7 +112,13 @@ const CompleteProfile = () => {
             <Input type="text" block />
             <FormLabel>Describe yourself</FormLabel>
             <Input textarea block />
-            <AddSkill />
+            <AddSkill
+              skill={state.skill}
+              skills={state.skills}
+              addSkill={addSkill}
+              editSkill={editSkill}
+              removeSkill={removeSkill}
+            />
             <Button block>Save</Button>
           </form>
         </Wrapper>
