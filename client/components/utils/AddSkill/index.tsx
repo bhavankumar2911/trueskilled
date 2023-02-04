@@ -28,6 +28,7 @@ const SkillSelector: React.FC<Props> = ({
           placeholder="Add your items here"
         />
         <Button
+          type="button"
           className="border border-primary rounded-tl-none rounded-bl-none hover:border-secondary m-0"
           onClick={() => addSkill(skill)}
         >

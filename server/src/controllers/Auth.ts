@@ -4,8 +4,12 @@ import successfulResponse from "../helpers/successfulResponse";
 import { checkExistingUser } from "../services/auth/checkExistingUser";
 import { hashPassword } from "../services/auth/hashPassword";
 import saveUserInDB from "../services/auth/saveUserInDB";
-import validateCompleteProfileData from "../services/auth/validateCompleteProfileData";
 import validateSignupData from "../services/auth/validateSignupData";
+import multer from "multer";
+import path from "path";
+import validateFile from "../helpers/validateFile";
+import validateCompleteProfileData from "../services/auth/validateCompleteProfileData";
+import User from "../models/User";
 
 export const signup: RequestHandler = async (req, res, next) => {
   const data = req.body;
@@ -34,14 +38,68 @@ export const signup: RequestHandler = async (req, res, next) => {
   else return next(createHttpError.InternalServerError());
 };
 
+// complete profile controller
 export const completeProfile: RequestHandler = async (req, res, next) => {
+  // var storage = multer.diskStorage({
+  //   destination: function (req, file, cb) {
+  //     cb(null, path.join(__dirname, "..", "..", "public", "avatars"));
+  //   },
+  //   filename: function (req, file, cb) {
+  //     cb(null, Date.now() + "-" + file.originalname);
+  //   },
+  // });
+
+  // var upload = multer({
+  //   storage: storage,
+  //   fileFilter: (req, file, cb) => {
+  //     const { isValid, message } = validateFile(
+  //       file as Express.Multer.File,
+  //       "image"
+  //     );
+
+  //     if (!isValid) {
+  //       cb(null, false);
+  //       return next(createHttpError.BadRequest(message));
+  //     }
+
+  //     return cb(null, true);
+  //   },
+  // }).single("profilePicture");
+
+  // upload(req, res, function (err) {
+  //   const file = req.file;
+
+  //   let { isValid, message } = validateFile(
+  //     file as Express.Multer.File,
+  //     "image"
+  //   );
+
+  //   if (!isValid) return next(createHttpError.BadRequest(message));
+
   const data = req.body;
+  const id = req.params.id;
 
-  const { isValid, message } = validateCompleteProfileData(data);
+  const validation = validateCompleteProfileData(data);
 
-  if (!isValid) return next(createHttpError.BadRequest(message));
+  if (!validation.isValid)
+    return next(createHttpError.BadRequest(validation.message));
 
-  return successfulResponse(res, {
-    message: "Profile information saved",
-  });
+  const { skills, username, bio } = data;
+
+  try {
+    const response = await User.updateOne(
+      { _id: id },
+      { username, bio, skills }
+    );
+
+    console.log(response);
+
+    return successfulResponse(res, {
+      message: "Profile information saved",
+    });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+
+  // });
 };

@@ -2,7 +2,7 @@ import isAlphanumeric from "validator/lib/isAlphanumeric";
 import CompleteProfileData from "../../interfaces/CompleteProfileData";
 
 export default (data: CompleteProfileData) => {
-  const { profilePicture, username, bio } = data;
+  let { skills, username, bio } = data;
 
   const validation = {
     isValid: true,
@@ -10,7 +10,7 @@ export default (data: CompleteProfileData) => {
   };
 
   //   empty fields check
-  if (!(profilePicture && username && bio)) {
+  if (!(skills && username && bio)) {
     validation.isValid = false;
     validation.message = "Please fill in all fields";
   }
@@ -19,6 +19,11 @@ export default (data: CompleteProfileData) => {
   else if (!isAlphanumeric(username)) {
     validation.isValid = false;
     validation.message = "Username can contain only alphabets and numbers";
+  } else {
+    // skills = JSON.parse(skills);
+
+    if (skills.length < 1) validation.isValid = false;
+    validation.message = "Enter atleast one skill";
   }
 
   return validation;

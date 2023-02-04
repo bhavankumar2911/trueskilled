@@ -1,19 +1,33 @@
+import axios, { formToJSON } from "axios";
 import Image from "next/image";
-import React, { useReducer, useState } from "react";
+import { useRouter } from "next/router";
+import React, { FormEventHandler, useReducer, useState } from "react";
+import { useMutation } from "react-query";
 import AddSkill from "../../components/utils/AddSkill";
 import Button from "../../components/utils/Button";
+import FormError from "../../components/utils/FormError";
 import FormLabel from "../../components/utils/FormLabel";
 import Input from "../../components/utils/Input";
 import Wrapper from "../../components/utils/Wrapper";
-import Avatar from "../../public/avatar.png";
 
-interface State {
+interface PostData {
   skills: string[];
+  username: string;
+  bio: string;
+}
+
+interface State extends PostData {
   skill: string;
 }
 
 interface Action {
-  type: "ADD_SKILL" | "REMOVE_SKILL" | "EDIT_SKILL";
+  type:
+    | "ADD_SKILL"
+    | "REMOVE_SKILL"
+    | "EDIT_SKILL"
+    | "PROFILE_PICTURE"
+    | "USERNAME"
+    | "BIO";
   payload: string;
 }
 
@@ -41,6 +55,13 @@ const reducer = (state: State, action: Action): State => {
 
     case "EDIT_SKILL":
       return { ...state, skill: payload as string };
+
+    case "USERNAME":
+      return { ...state, username: payload as string };
+
+    case "BIO":
+      return { ...state, bio: payload as string };
+
     default:
       return { ...state };
   }
@@ -49,28 +70,55 @@ const reducer = (state: State, action: Action): State => {
 const initialState: State = {
   skills: [],
   skill: "",
+  bio: "",
+  username: "",
+};
+
+const saveProfileInfo = async (data: PostData) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+  return axios.post(`/auth/complete-profile/${params.get("id")}`, data);
 };
 
 const CompleteProfile = () => {
-  const [profilePicture, setProfilePicture] = useState("");
+  // const [localFileLink, setLocalFileLink] = useState("");
+  // const [file, setFile] = useState<File | null>(null);
+  // const [bio, setBio] = useState("");
+  // const [skills, setSkills] = useState<string[]>([]);
+  // const [skill, setSkill] = useState("");
+  // const [username, setUsername] = useState("");
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const addSkill = (skill: string) => {
-    if (skill && !state.skills.includes(skill))
-      return dispatch({ type: "ADD_SKILL", payload: state.skill });
+  const { isError, mutate, error } = useMutation(saveProfileInfo, {
+    // onSuccess: (res) => console.log(res),
+    // onError: (err) => console.log(err),
+  });
+
+  // console.log("Printing errror ---------> ", isError, error);
+
+  const addSkill = () => {
+    if (state.skill && !state.skills.includes(state.skill)) {
+      dispatch({ type: "ADD_SKILL", payload: state.skill });
+      dispatch({ type: "EDIT_SKILL", payload: "" });
+    }
   };
 
-  const removeSkill = (skill: string) =>
+  const removeSkill = (skill: string) => {
     dispatch({ type: "REMOVE_SKILL", payload: skill });
+  };
 
   const editSkill = (skill: string) =>
     dispatch({ type: "EDIT_SKILL", payload: skill });
 
-  const handleFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      setProfilePicture(URL.createObjectURL(file));
-    }
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const { username, bio, skills } = state;
+
+    console.log("printing form----------->", username, bio, skills);
+
+    mutate({ username, bio, skills });
   };
 
   return (
@@ -84,14 +132,22 @@ const CompleteProfile = () => {
       {/* bottom */}
       <section className="sm:col-span-2 sm:h-screen sm:flex sm:max-h-screen sm:overflow-y-scroll sm:px-3">
         <Wrapper>
-          <form className="md:w-3/4 mx-auto sm:pb-10 max-w-[500px]">
+          <form
+            // method="post"
+            // action="http://localhost:9000/auth/complete-profile"
+            // encType="multipart/form-data"
+            className="md:w-3/4 mx-auto sm:pb-10 max-w-[500px]"
+            onSubmit={handleSubmit}
+          >
             <h2 className="text-gray-800 hidden sm:block font-bold text-3xl mb-10">
               Complete your profile
             </h2>
-            <div className="flex flex-col items-center sm:flex-row">
+            <FormError isError={isError} error={error as Error} />
+
+            {/* <div className="flex flex-col items-center sm:flex-row">
               <div className="w-[100px] h-[100px] rounded-full overflow-hidden mb-4 relative">
                 <Image
-                  src={profilePicture ? profilePicture : Avatar}
+                  src={localFileLink ? localFileLink : Avatar}
                   alt="avatar"
                   fill
                   className="object-cover"
@@ -100,6 +156,7 @@ const CompleteProfile = () => {
               <div className="mb-4 flex items-center sm:ml-10">
                 <FormLabel className="mr-2 mt-1">Profile picture</FormLabel>
                 <input
+                  name="file"
                   type="file"
                   className="block text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-green-100 border border-primary file:text-sm file:font-semibold file:rounded-sm file:cursor-pointer 
@@ -107,11 +164,27 @@ const CompleteProfile = () => {
                   onChange={handleFileSelect}
                 />
               </div>
-            </div>
+            </div> */}
             <FormLabel>Choose a username</FormLabel>
-            <Input type="text" block />
+            <Input
+              name="username"
+              type="text"
+              value={state.username}
+              onChange={(e) =>
+                dispatch({ type: "USERNAME", payload: e.target.value })
+              }
+              block
+            />
             <FormLabel>Describe yourself</FormLabel>
-            <Input textarea block />
+            <Input
+              name="bio"
+              value={state.bio}
+              onChange={(e) =>
+                dispatch({ type: "BIO", payload: e.target.value })
+              }
+              textarea
+              block
+            />
             <AddSkill
               skill={state.skill}
               skills={state.skills}
@@ -119,7 +192,9 @@ const CompleteProfile = () => {
               editSkill={editSkill}
               removeSkill={removeSkill}
             />
-            <Button block>Save</Button>
+            <Button type="submit" block>
+              Save
+            </Button>
           </form>
         </Wrapper>
       </section>

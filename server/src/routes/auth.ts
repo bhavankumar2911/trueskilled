@@ -7,6 +7,6 @@ const authRouter = Router();
 authRouter.post("/signup", signup);
 
 // complete profile
-authRouter.post("/complete-profile", completeProfile);
+authRouter.post("/complete-profile/:id", completeProfile);
 
 export default authRouter;

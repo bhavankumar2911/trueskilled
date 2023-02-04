@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 
 const userSchema = new Schema({
   firstName: String,
@@ -8,7 +8,7 @@ const userSchema = new Schema({
   bio: String,
   username: String,
   profilePicture: String,
-  skills: [Types.ObjectId],
+  skills: [String],
 });
 
 const User = model("User", userSchema);
