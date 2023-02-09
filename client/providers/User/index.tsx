@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useContext, useReducer } from "react";
 import { createContext } from "react";
+import { useQuery } from "react-query";
 import User from "../../interfaces/User";
 import reducer from "./reducer";
 
@@ -45,8 +46,11 @@ const initialUserState: State = {
 
 const UserContext = createContext<State>(initialUserState);
 
+const getUser = () => {};
+
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);
+  const { isLoading, isError, data } = useQuery("user-query", getUser);
 
   return <UserContext.Provider value={state}>{children}</UserContext.Provider>;
 };

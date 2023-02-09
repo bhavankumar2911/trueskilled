@@ -1,3 +1,4 @@
+import { IUser } from "../../interfaces/IUser";
 import User from "../../models/User";
 
 // checking existing users
@@ -5,7 +6,12 @@ export const checkExistingUser = async (
   field: "email" | "username",
   value: string
 ) => {
-  let result = {
+  interface Result {
+    doesExit: boolean;
+    error: boolean;
+    user?: IUser;
+  }
+  let result: Result = {
     doesExit: false,
     error: false,
   };
@@ -13,15 +19,25 @@ export const checkExistingUser = async (
   try {
     //   check by email
     if (field == "email") {
-      const existingUser = await User.findOne({ email: value }, "_id");
+      const existingUser = await User.findOne({
+        email: value,
+      });
 
-      if (existingUser) result.doesExit = true;
+      if (existingUser) {
+        result.doesExit = true;
+        result.user = existingUser;
+      }
     }
     //   check by username
     else {
-      const existingUser = await User.findOne({ username: value }, "_id");
+      const existingUser = await User.findOne({
+        username: value,
+      });
 
-      if (existingUser) result.doesExit = true;
+      if (existingUser) {
+        result.doesExit = true;
+        result.user = existingUser;
+      }
     }
   } catch (error) {
     console.log("Cannot check existing user", error);

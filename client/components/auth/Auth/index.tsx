@@ -61,7 +61,8 @@ const Auth: React.FC<Props> = ({ service }) => {
     mutate: signupMutate,
     error: signupError,
   } = useMutation((data: SignupState) => axios.post("/auth/signup", data), {
-    onSuccess: () => router.push("/complete-profile"),
+    onSuccess: (data) =>
+      router.push(`/complete-profile?id=${data.data.user._id}`),
   });
 
   const handleEmailChange = (email: string) => {

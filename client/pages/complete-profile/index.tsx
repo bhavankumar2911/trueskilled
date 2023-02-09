@@ -1,5 +1,4 @@
 import axios, { formToJSON } from "axios";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { FormEventHandler, useReducer, useState } from "react";
 import { useMutation } from "react-query";
@@ -88,14 +87,13 @@ const CompleteProfile = () => {
   // const [skill, setSkill] = useState("");
   // const [username, setUsername] = useState("");
 
+  const router = useRouter();
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const { isError, mutate, error } = useMutation(saveProfileInfo, {
-    // onSuccess: (res) => console.log(res),
-    // onError: (err) => console.log(err),
+    onSuccess: (res) => router.push(`/upload-avatar?id=${router.query.id}`),
   });
-
-  // console.log("Printing errror ---------> ", isError, error);
 
   const addSkill = () => {
     if (state.skill && !state.skills.includes(state.skill)) {
@@ -115,8 +113,6 @@ const CompleteProfile = () => {
     e.preventDefault();
 
     const { username, bio, skills } = state;
-
-    console.log("printing form----------->", username, bio, skills);
 
     mutate({ username, bio, skills });
   };
