@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { FC, ReactNode, useContext, useReducer } from "react";
 import { createContext } from "react";
 import { useQuery } from "react-query";
@@ -46,7 +47,7 @@ const initialUserState: State = {
 
 const UserContext = createContext<State>(initialUserState);
 
-const getUser = () => {};
+const getUser = () => axios.get("/user/profile");
 
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);

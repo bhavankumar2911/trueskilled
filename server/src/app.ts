@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import connection from "./db/connection";
 import authRouter from "./routes/auth";
+import userRouter from "./routes/user";
 import path from "path";
 
 const app = express();
@@ -20,6 +21,7 @@ connection();
 
 // api routes
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 // 404 api request
 app.use((req, res, next) => {
