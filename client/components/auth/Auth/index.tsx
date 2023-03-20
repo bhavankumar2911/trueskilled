@@ -17,8 +17,18 @@ interface SignupState {
   passwordConfirm: string;
 }
 
+interface LoginState {
+  email: string;
+  password: string;
+}
+
 interface SignupAction {
   type: "FIRSTNAME" | "LASTNAME" | "EMAIL" | "PASSWORD" | "PASSWORD_CONFIRM";
+  payload: string;
+}
+
+interface LoginAction {
+  type: "EMAIL" | "PASSWORD";
   payload: string;
 }
 
@@ -28,6 +38,11 @@ const signupForm: SignupState = {
   email: "",
   password: "",
   passwordConfirm: "",
+};
+
+const loginForm: LoginState = {
+  email: "",
+  password: "",
 };
 
 const signupReducer = (
@@ -52,11 +67,26 @@ const signupReducer = (
   }
 };
 
+const loginReducer = (state: LoginState, action: LoginAction): LoginState => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case "EMAIL":
+      return { ...state, email: payload };
+    case "PASSWORD":
+      return { ...state, password: payload };
+    default:
+      return { ...state };
+  }
+};
+
 const Auth: React.FC<Props> = ({ service }) => {
   const router = useRouter();
   const [signupState, signupDispatch] = useReducer(signupReducer, signupForm);
+  const [loginState, loginDispatch] = useReducer(loginReducer, loginForm);
+
   const {
-    data: signupData,
+    // data: signupData,
     isError: signupIsError,
     mutate: signupMutate,
     error: signupError,
@@ -65,10 +95,20 @@ const Auth: React.FC<Props> = ({ service }) => {
       router.push(`/complete-profile?id=${data.data.user._id}`),
   });
 
+  const {
+    // data: loginData,
+    isError: loginIsError,
+    mutate: loginMutate,
+    error: loginError,
+  } = useMutation((data: LoginState) => axios.post("/auth/login", data), {
+    onSuccess: (data) => router.push(`/user?id=${data.data.id}`),
+  });
+
   const handleEmailChange = (email: string) => {
     if (service == "signup") {
       signupDispatch({ type: "EMAIL", payload: email });
     } else {
+      loginDispatch({ type: "EMAIL", payload: email });
     }
   };
 
@@ -76,6 +116,7 @@ const Auth: React.FC<Props> = ({ service }) => {
     if (service == "signup") {
       signupDispatch({ type: "PASSWORD", payload: password });
     } else {
+      loginDispatch({ type: "PASSWORD", payload: password });
     }
   };
 
@@ -85,6 +126,9 @@ const Auth: React.FC<Props> = ({ service }) => {
     if (service == "signup") {
       signupMutate({ ...signupState });
     } else {
+      console.log("logging in");
+
+      loginMutate({ ...loginState });
     }
   };
 
@@ -125,6 +169,18 @@ const Auth: React.FC<Props> = ({ service }) => {
               signupError.response?.data.error.message}
           </p>
 
+          <p
+            className={`opacity-0 transition-all duration-500 ${
+              loginIsError
+                ? "text-red-500 border border-red-500 bg-red-50 p-3 text-center mb-7 opacity-100"
+                : ""
+            }`}
+          >
+            {loginIsError &&
+              loginError instanceof AxiosError &&
+              loginError.response?.data.error.message}
+          </p>
+
           {service == "signup" && (
             <Fragment>
               <div className="sm:grid sm:grid-cols-2 sm:gap-3">
@@ -160,17 +216,20 @@ const Auth: React.FC<Props> = ({ service }) => {
           <Input
             type="email"
             placeholder="Email"
-            value={signupState.email}
+            value={service == "signup" ? signupState.email : loginState.email}
             onChange={(e) => handleEmailChange(e.target.value)}
             block
           />
           <Input
             type="password"
             placeholder="Password"
-            value={signupState.password}
+            value={
+              service == "signup" ? signupState.password : loginState.password
+            }
             onChange={(e) => handlePasswordChange(e.target.value)}
             block
           />
+
           {service == "signup" && (
             <Input
               type="password"
