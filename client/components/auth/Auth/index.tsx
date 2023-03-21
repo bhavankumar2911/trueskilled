@@ -101,7 +101,7 @@ const Auth: React.FC<Props> = ({ service }) => {
     mutate: loginMutate,
     error: loginError,
   } = useMutation((data: LoginState) => axios.post("/auth/login", data), {
-    onSuccess: (data) => router.push(`/user?id=${data.data.id}`),
+    onSuccess: (data) => router.push(`/user`),
   });
 
   const handleEmailChange = (email: string) => {

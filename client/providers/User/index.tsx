@@ -51,7 +51,20 @@ const getUser = () => axios.get("/user/profile");
 
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialUserState);
-  const { isLoading, isError, data } = useQuery("user-query", getUser);
+  const { isLoading, isError, data } = useQuery("user-query", getUser, {
+    onSuccess: (res) => {
+      console.log("success ran");
+
+      console.log(res);
+    },
+    onError: (err) => {
+      console.log("error ran");
+
+      console.log(err);
+    },
+  });
+
+  if (isLoading) return <p>Loading user</p>;
 
   return <UserContext.Provider value={state}>{children}</UserContext.Provider>;
 };

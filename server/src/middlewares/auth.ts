@@ -11,10 +11,11 @@ import successfulResponse from "../helpers/successfulResponse";
 
 const auth: RequestHandler = async (req: RequestWithUser, res, next) => {
   const cookies = req.cookies;
+
   let decoded: JwtPayload = { id: "" };
 
   //   token not present
-  if (!cookies.access_token || !cookies.refresh_token)
+  if (!(cookies.access_token && cookies.refresh_token))
     return next(createHttpError.Unauthorized("You are unauthorized"));
 
   // verify access token
@@ -102,12 +103,10 @@ const auth: RequestHandler = async (req: RequestWithUser, res, next) => {
     ) as JwtPayload;
 
     // check token in blacklist
-    const refreshToken = await RefreshToken.findOne({
-      where: { userId: decoded.id },
-    });
+    const refreshToken = await RefreshToken.findOne({ id: decoded.id });
 
     if (refreshToken?.token != cookies.refresh_token) {
-      return next(createHttpError.Unauthorized("You are unauthorized"));
+      return next(createHttpError.Unauthorized("You are unauthorized here"));
     }
 
     // authorized
@@ -117,7 +116,7 @@ const auth: RequestHandler = async (req: RequestWithUser, res, next) => {
       return successfulResponse(res, { message: "Authorized" });
     else return next();
   } catch (error) {
-    return next(createHttpError.Unauthorized("You are unauthorized"));
+    return next(createHttpError.Unauthorized("You are unauthorized 2"));
   }
 };
 
