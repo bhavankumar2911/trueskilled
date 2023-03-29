@@ -11,6 +11,8 @@ const InfoCard: FC = () => {
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
 
+  console.log(avatar);
+
   const editAccount = user ? (user.username == username ? true : false) : false;
 
   return (
@@ -27,7 +29,7 @@ const InfoCard: FC = () => {
           avatar={avatar}
         />
       </Modal>
-      <Avatar src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
+      <Avatar src={avatar} />
       <h2 className="font-bold text-xl">{name}</h2>
       <p className="text-gray-500 text-sm">@{username}</p>
       <ul className="flex flex-wrap gap-2 mt-5 justify-center">

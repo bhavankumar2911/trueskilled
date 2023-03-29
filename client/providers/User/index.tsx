@@ -1,9 +1,18 @@
-import axios from "axios";
-import React, { FC, ReactNode, useContext, useReducer } from "react";
+import axios, { AxiosError } from "axios";
+import React, {
+  FC,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { createContext } from "react";
 import { useQuery } from "react-query";
 import User from "../../interfaces/User";
 import reducer from "./reducer";
+import Loader from "../../components/utils/Loader";
+import { useRouter } from "next/router";
 
 export interface State extends User {
   avatar: string;
@@ -47,24 +56,61 @@ const initialUserState: State = {
 
 const UserContext = createContext<State>(initialUserState);
 
-const getUser = () => axios.get("/user/profile");
-
 const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [fetchUser, setFetchUser] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialUserState);
-  const { isLoading, isError, data } = useQuery("user-query", getUser, {
-    onSuccess: (res) => {
-      console.log("success ran");
+  const router = useRouter();
+  const { isLoading, isError } = useQuery(
+    "user-query",
+    () => axios.get(`/user/${router.query.id}`),
+    {
+      enabled: fetchUser,
+      onSuccess: (res) => {
+        const { user } = res.data;
+        console.log("user ----> ", user);
 
-      console.log(res);
-    },
-    onError: (err) => {
-      console.log("error ran");
+        const {
+          firstName,
+          lastName,
+          username,
+          skills,
+          bio,
+          projects,
+          profilePicture,
+        } = user;
+        dispatch({ type: "NAME", payload: `${firstName} ${lastName}` });
+        dispatch({ type: "USERNAME", payload: username });
+        dispatch({ type: "SKILLS", payload: skills });
+        dispatch({ type: "ABOUT", payload: bio });
+        dispatch({ type: "PROJECTS", payload: projects });
+        dispatch({ type: "AVATAR", payload: profilePicture });
+        console.log(
+          firstName,
+          lastName,
+          username,
+          skills,
+          bio,
+          projects,
+          profilePicture
+        );
+      },
+      onError: (err) => {
+        console.log("error ran");
+        if (err instanceof AxiosError) {
+          console.log(err.response?.data.error.status);
+          // if (err.response?.data.error.status == 401) router.push("/login");
+        }
+      },
+    }
+  );
 
-      console.log(err);
-    },
-  });
+  useEffect(() => {
+    if (router.query.id) setFetchUser(true);
+  }, [router.query]);
 
-  if (isLoading) return <p>Loading user</p>;
+  if (isLoading) return <Loader />;
+
+  if (isError) return null;
 
   return <UserContext.Provider value={state}>{children}</UserContext.Provider>;
 };

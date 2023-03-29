@@ -6,6 +6,7 @@ import connection from "./db/connection";
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import path from "path";
+import auth from "./middlewares/auth";
 
 const app = express();
 
@@ -22,6 +23,7 @@ connection();
 // api routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/api/auth", auth);
 
 // 404 api request
 app.use((req, res, next) => {

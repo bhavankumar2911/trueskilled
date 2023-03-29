@@ -33,7 +33,7 @@ const Modal: FC<Props> = ({ children, title, showModal, setShowModal }) => {
       >
         <div className="flex justify-between items-center mb-5 h-[50%]">
           <h2 className="capitalize font-semibold text-lg">{title}</h2>
-          <span onClick={() => setShowModal(false)}>
+          <span className="cursor-pointer" onClick={() => setShowModal(false)}>
             <GrClose />
           </span>
         </div>

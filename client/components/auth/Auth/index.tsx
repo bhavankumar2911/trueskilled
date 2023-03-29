@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { Fragment, useReducer } from "react";
 import { useMutation } from "react-query";
+import { useAppContext } from "../../../providers/App";
 import Alert from "../../utils/Alert";
 import Button from "../../utils/Button";
 import Input from "../../utils/Input";
@@ -82,6 +83,7 @@ const loginReducer = (state: LoginState, action: LoginAction): LoginState => {
 
 const Auth: React.FC<Props> = ({ service }) => {
   const router = useRouter();
+  const { setAppUser } = useAppContext();
   const [signupState, signupDispatch] = useReducer(signupReducer, signupForm);
   const [loginState, loginDispatch] = useReducer(loginReducer, loginForm);
 
@@ -101,7 +103,11 @@ const Auth: React.FC<Props> = ({ service }) => {
     mutate: loginMutate,
     error: loginError,
   } = useMutation((data: LoginState) => axios.post("/auth/login", data), {
-    onSuccess: (data) => router.push(`/user`),
+    onSuccess: (res) => {
+      const { id, user } = res.data;
+      if (setAppUser) setAppUser(user);
+      router.push(`/user?id=${id}`);
+    },
   });
 
   const handleEmailChange = (email: string) => {
@@ -126,8 +132,6 @@ const Auth: React.FC<Props> = ({ service }) => {
     if (service == "signup") {
       signupMutate({ ...signupState });
     } else {
-      console.log("logging in");
-
       loginMutate({ ...loginState });
     }
   };

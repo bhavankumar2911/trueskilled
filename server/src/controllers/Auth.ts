@@ -20,6 +20,7 @@ import jwt from "jsonwebtoken";
 import { TokenConfig } from "../config";
 import signToken from "../services/auth/signToken";
 import saveRefreshToken from "../services/auth/saveRefreshToken";
+import { IUser } from "../interfaces/IUser";
 
 if (process.env.NODE_ENV == "development") config();
 
@@ -250,9 +251,25 @@ export const login: RequestHandler = async (req, res, next) => {
     maxAge: 2 * 60 * 1000,
   });
 
+  const { firstName, lastName, bio, username, profilePicture, skills } =
+    user as IUser;
+
+  // user = {firstName, lastName, bio, username, profilePicture, skills}
+
+  const userWithoutPassword = {
+    firstName,
+    lastName,
+    bio,
+    username,
+    profilePicture,
+    skills,
+    email: user?.email,
+  };
+
   return successfulResponse(res, {
     loggedIn: true,
     message: "Login successful",
     id: user ? user.id : "",
+    user: userWithoutPassword,
   });
 };
