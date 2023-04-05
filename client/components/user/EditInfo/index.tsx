@@ -1,13 +1,18 @@
-import React, { FC, FormEventHandler, useReducer } from "react";
+import React, { FC, FormEventHandler, useReducer, useState } from "react";
 import Avatar from "../../utils/Avatar";
 import AvatarPlaceholder from "../../../public/avatar.png";
 import Input from "../../utils/Input";
 import SkillSelector from "../../utils/AddSkill";
 import FormLabel from "../../utils/FormLabel";
 import Button from "../../utils/Button";
+import axios, { AxiosError } from "axios";
+import { useUserContext } from "../../../providers/User";
+import { useMutation } from "react-query";
+import Error from "../../utils/Error";
 
 interface Props {
-  name: string;
+  firstName: string;
+  lastName: string;
   username: string;
   skills: string[];
   avatar: string;
@@ -18,7 +23,14 @@ interface State extends Props {
 }
 
 interface Action {
-  type: "ADD_SKILL" | "REMOVE_SKILL" | "EDIT_SKILL" | "CHANGE_AVATAR";
+  type:
+    | "ADD_SKILL"
+    | "REMOVE_SKILL"
+    | "EDIT_SKILL"
+    | "CHANGE_AVATAR"
+    | "USERNAME"
+    | "FIRSTNAME"
+    | "LASTNAME";
   payload: unknown;
 }
 
@@ -42,19 +54,47 @@ const reducer = (state: State, action: Action) => {
       return { ...state, skill: payload as string };
     case "CHANGE_AVATAR":
       return { ...state, avatar: payload as string };
+    case "FIRSTNAME":
+      return { ...state, firstName: payload as string };
+    case "LASTNAME":
+      return { ...state, lastName: payload as string };
+    case "USERNAME":
+      return { ...state, username: payload as string };
     default:
       return { ...state };
   }
 };
 
-const EditInfo: FC<Props> = ({ name, username, skills, avatar }) => {
+const updateInfo = (data: FormData) => {
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+  return axios.patch(`/user/info/${params.get("id")}`, data);
+};
+
+const EditInfo: FC<Props> = ({
+  firstName,
+  lastName,
+  username,
+  skills,
+  avatar,
+}) => {
   const [state, dispatch] = useReducer(reducer, {
-    name,
+    firstName,
+    lastName,
     username,
     skills,
     skill: "",
     avatar,
   });
+  const [file, setFile] = useState<File | null>(null);
+  const { mutate } = useMutation(updateInfo, {
+    onSuccess: (res) => console.log(res.data),
+    onError: (err) => {
+      if (err instanceof AxiosError && err.response)
+        setError(err.response.data.error.message);
+    },
+  });
+  const [error, setError] = useState<null | string>(null);
 
   const addSkill = (skill: string) => {
     if (!skill) return;
@@ -69,17 +109,36 @@ const EditInfo: FC<Props> = ({ name, username, skills, avatar }) => {
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    console.log(state);
+    const data = new FormData();
+    data.append("avatar", file as File);
+    data.append("firstName", state.firstName);
+    data.append("lastName", state.lastName);
+    data.append("username", state.username);
+    data.append("skills", JSON.stringify(state.skills));
+    console.log(data.get("avatar"));
+    console.log(data.get("firstName"));
+    console.log(data.get("lastName"));
+    console.log(data.get("username"));
+    console.log(data.get("skills"));
+
+    mutate(data);
   };
 
   const handleFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files) {
-      const file = e.target.files[0];
-      dispatch({ type: "CHANGE_AVATAR", payload: URL.createObjectURL(file) });
+      const tempFile = e.target.files[0];
+      dispatch({
+        type: "CHANGE_AVATAR",
+        payload: URL.createObjectURL(tempFile),
+      });
+      setFile(tempFile);
     }
   };
 
   return (
     <div>
+      {error && <Error error={error} setError={setError} />}
       <form onSubmit={handleFormSubmit}>
         <div className="mb-5">
           <center>
@@ -96,11 +155,36 @@ const EditInfo: FC<Props> = ({ name, username, skills, avatar }) => {
             </div>
           </center>
         </div>
-        <Input type="text" placeholder="Name" value={state.name} block />
+        <div className="sm:grid sm:grid-cols-2 sm:gap-3">
+          <Input
+            type="text"
+            className="sm:col-span-1"
+            placeholder="First Name"
+            value={state.firstName}
+            onChange={(e) =>
+              dispatch({ type: "FIRSTNAME", payload: e.target.value })
+            }
+            block
+          />
+          <Input
+            type="text"
+            className="sm:col-span-1"
+            placeholder="Last Name"
+            value={state.lastName}
+            onChange={(e) =>
+              dispatch({ type: "LASTNAME", payload: e.target.value })
+            }
+            block
+          />
+        </div>
+
         <Input
           type="text"
           placeholder="Username"
           value={state.username}
+          onChange={(e) =>
+            dispatch({ type: "USERNAME", payload: e.target.value })
+          }
           block
         />
         <SkillSelector

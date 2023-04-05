@@ -2,17 +2,29 @@ import { State } from ".";
 
 // interface
 interface Action {
-  type: "NAME" | "USERNAME" | "SKILLS" | "ABOUT" | "PROJECTS" | "AVATAR";
+  type:
+    | "FIRSTNAME"
+    | "LASTNAME"
+    | "USERNAME"
+    | "SKILLS"
+    | "ABOUT"
+    | "PROJECTS"
+    | "AVATAR";
   payload: unknown;
 }
 
 export default (state: State, action: Action) => {
   const { type, payload } = action;
   switch (type) {
-    case "NAME":
+    case "FIRSTNAME":
       return {
         ...state,
-        name: payload as string,
+        firstName: payload as string,
+      };
+    case "LASTNAME":
+      return {
+        ...state,
+        lastName: payload as string,
       };
     case "USERNAME":
       return {

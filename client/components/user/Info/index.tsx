@@ -7,7 +7,7 @@ import EditInfo from "../EditInfo";
 import SectionCard from "../SectionCard";
 
 const InfoCard: FC = () => {
-  const { name, username, skills, avatar } = useUserContext();
+  const { firstName, lastName, username, skills, avatar } = useUserContext();
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
 
@@ -23,14 +23,15 @@ const InfoCard: FC = () => {
         setShowModal={setShowModal}
       >
         <EditInfo
-          name={name}
+          firstName={firstName}
+          lastName={lastName}
           username={username}
           skills={skills}
           avatar={avatar}
         />
       </Modal>
       <Avatar src={avatar} />
-      <h2 className="font-bold text-xl">{name}</h2>
+      <h2 className="font-bold text-xl">{`${firstName} ${lastName}`}</h2>
       <p className="text-gray-500 text-sm">@{username}</p>
       <ul className="flex flex-wrap gap-2 mt-5 justify-center">
         {skills.map((skill, index) => (

@@ -19,7 +19,8 @@ export interface State extends User {
 }
 
 const initialUserState: State = {
-  name: "john doe",
+  firstName: "john",
+  lastName: "doe",
   username: "johndoe",
   avatar:
     "https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -67,7 +68,6 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       enabled: fetchUser,
       onSuccess: (res) => {
         const { user } = res.data;
-        console.log("user ----> ", user);
 
         const {
           firstName,
@@ -78,7 +78,8 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
           projects,
           profilePicture,
         } = user;
-        dispatch({ type: "NAME", payload: `${firstName} ${lastName}` });
+        dispatch({ type: "FIRSTNAME", payload: firstName });
+        dispatch({ type: "LASTNAME", payload: lastName });
         dispatch({ type: "USERNAME", payload: username });
         dispatch({ type: "SKILLS", payload: skills });
         dispatch({ type: "ABOUT", payload: bio });

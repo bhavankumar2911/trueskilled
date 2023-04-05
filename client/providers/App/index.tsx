@@ -19,7 +19,8 @@ export interface IState {
 const initialAppState: IState = {
   loggedIn: false,
   user: {
-    name: "john doe",
+    firstName: "john",
+    lastName: "doe",
     username: "johndoe",
     skills: ["python", "java"],
     projects: [],

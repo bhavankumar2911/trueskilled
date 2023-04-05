@@ -1,5 +1,6 @@
 export default interface IProps {
-  name: string;
+  firstName: string;
+  lastName: string;
   username: string;
   skills: string[];
   about: string;

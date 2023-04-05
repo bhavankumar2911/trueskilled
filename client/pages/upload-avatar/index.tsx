@@ -31,20 +31,11 @@ const UploadAvatar = () => {
       const tempFile = e.target.files[0];
       setLocalFileLink(URL.createObjectURL(tempFile));
       setFile(tempFile);
-
-      // setEmptyError("");
-      // setEmptyIsError(false);
     }
   };
 
   const handleFileUpload: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-
-    // if (!localFileLink) {
-    //   setEmptyError("Kindle select a file");
-    //   setEmptyIsError(true);
-    //   return;
-    // }
 
     // send request
     const data = new FormData();

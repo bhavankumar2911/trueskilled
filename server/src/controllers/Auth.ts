@@ -127,14 +127,6 @@ export const completeProfile: RequestHandler = async (req, res, next) => {
 
 // upload avatar
 export const uploadAvatar: RequestHandler = async (req, res, next) => {
-  // deleting the old avatar of the user
-  // const id = req.params.id;
-
-  // const oldAvatarDeletion = await deleteOldAvatar(id);
-
-  // if (oldAvatarDeletion.error)
-  //   return next(createHttpError.InternalServerError(oldAvatarDeletion.message));
-
   // file upload config
 
   var storage = multer.diskStorage({

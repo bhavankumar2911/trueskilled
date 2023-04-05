@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React, { Fragment, useReducer } from "react";
 import { useMutation } from "react-query";
 import { useAppContext } from "../../../providers/App";
-import Alert from "../../utils/Alert";
 import Button from "../../utils/Button";
 import Input from "../../utils/Input";
 import Logo from "../../utils/Logo";
@@ -42,8 +41,8 @@ const signupForm: SignupState = {
 };
 
 const loginForm: LoginState = {
-  email: "",
-  password: "",
+  email: "bhavan@gmail.com",
+  password: "pass",
 };
 
 const signupReducer = (
