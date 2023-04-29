@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 
 export interface State extends User {
   avatar: string;
+  updateAbout?(about: string): void;
 }
 
 const initialUserState: State = {
@@ -105,6 +106,10 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   );
 
+  const updateAbout = (about: string) => {
+    dispatch({ type: "ABOUT", payload: about });
+  };
+
   useEffect(() => {
     if (router.query.id) setFetchUser(true);
   }, [router.query]);
@@ -113,7 +118,11 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   if (isError) return null;
 
-  return <UserContext.Provider value={state}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ ...state, updateAbout }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUserContext = () => useContext(UserContext);

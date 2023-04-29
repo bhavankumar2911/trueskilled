@@ -21,7 +21,7 @@ const About: FC = () => {
         setShowModal={setShowModal}
         title="Edit About"
       >
-        <EditAbout about={about} />
+        <EditAbout about={about} setShowModal={setShowModal} />
       </Modal>
       <SectionTitle>About</SectionTitle>
       <p className="text-center">{about}</p>

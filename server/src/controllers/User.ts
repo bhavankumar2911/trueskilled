@@ -158,3 +158,17 @@ export const updateUserInfo: RequestHandler = async (req, res, next) => {
     }
   });
 };
+
+export const updateUserAbout: RequestHandler = async (req, res, next) => {
+  const { id } = req.params;
+
+  const { about } = req.body;
+
+  try {
+    await User.updateOne({ _id: id }, { bio: about });
+
+    return successfulResponse(res, { message: "About updated" });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+};
