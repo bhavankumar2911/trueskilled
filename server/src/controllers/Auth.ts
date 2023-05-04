@@ -162,7 +162,7 @@ export const uploadAvatar: RequestHandler = async (req, res, next) => {
 
     const file = req.file;
 
-    if (!file) return next(createHttpError.BadRequest("Kindle select a file"));
+    if (!file) return next(createHttpError.BadRequest("Kindly select a file"));
 
     const avatarURL = `${process.env.SERVER_HOST}/public/avatars/${file.filename}`;
 

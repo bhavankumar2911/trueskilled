@@ -11,7 +11,7 @@ interface State {
   tag: string;
   repositoryLink: string;
   previewLink: string;
-  demoVideo: string;
+  // demoVideo: string;
 }
 
 interface Props {
@@ -25,7 +25,14 @@ interface Props {
 }
 
 interface Action {
-  type: "ADD_TAG" | "REMOVE_TAG" | "EDIT_TAG";
+  type:
+    | "ADD_TAG"
+    | "REMOVE_TAG"
+    | "EDIT_TAG"
+    | "TITLE"
+    | "DESCRIPTION"
+    | "REPO_LINK"
+    | "PREVIEW_LINK";
   payload: boolean | string | string[];
 }
 
@@ -48,6 +55,19 @@ const reducer = (state: State, action: Action) => {
 
     case "EDIT_TAG":
       return { ...state, tag: payload as string };
+
+    case "TITLE":
+      return { ...state, title: payload as string };
+
+    case "DESCRIPTION":
+      return { ...state, description: payload as string };
+
+    case "REPO_LINK":
+      return { ...state, repositoryLink: payload as string };
+
+    case "PREVIEW_LINK":
+      return { ...state, previewLink: payload as string };
+
     default:
       return { ...state };
   }
@@ -62,6 +82,11 @@ const ProjectInput: FC<Props> = ({
   previewLink,
   demoVideo,
 }) => {
+  // const [localThumbnailLink, setLocalThumbnailLink] = useState("");
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  // const [localVideoLink, setLocalVideoLink] = useState("");
+  const [video, setVideo] = useState<File | null>(null);
+
   const [state, dispatch] = useReducer(reducer, {
     title: title ? title : "",
     description: description ? description : "",
@@ -69,8 +94,24 @@ const ProjectInput: FC<Props> = ({
     tag: "",
     repositoryLink: repositoryLink ? repositoryLink : "",
     previewLink: previewLink ? previewLink : "",
-    demoVideo: demoVideo ? demoVideo : "",
+    // demoVideo: demoVideo ? demoVideo : "",
   });
+
+  const handleThumbnailSelect: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const tempFile = e.target.files[0];
+      setThumbnail(tempFile);
+    }
+  };
+
+  const handleVideoSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const tempFile = e.target.files[0];
+      setVideo(tempFile);
+    }
+  };
 
   const addTag = (tag: string) => {
     if (tag && !state.tags.includes(tag))
@@ -84,12 +125,27 @@ const ProjectInput: FC<Props> = ({
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+    console.log(state);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <Input type="text" placeholder="Project Title*" block />
-      <Input placeholder="Project Description*" textarea block />
+      <Input
+        type="text"
+        placeholder="Project Title*"
+        value={state.title}
+        onChange={(e) => dispatch({ type: "TITLE", payload: e.target.value })}
+        block
+      />
+      <Input
+        placeholder="Project Description*"
+        value={state.description}
+        onChange={(e) =>
+          dispatch({ type: "DESCRIPTION", payload: e.target.value })
+        }
+        textarea
+        block
+      />
       <FormLabel>Thumbnail*</FormLabel>
       <input
         type="file"
@@ -107,9 +163,26 @@ const ProjectInput: FC<Props> = ({
         removeSkill={removeTag}
       />
       <FormLabel>Additional Information</FormLabel>
-      <Input type="url" placeholder="Repository Link" className="mb-2" block />
+      <Input
+        type="url"
+        placeholder="Repository Link"
+        className="mb-2"
+        value={state.repositoryLink}
+        onChange={(e) =>
+          dispatch({ type: "REPO_LINK", payload: e.target.value })
+        }
+        block
+      />
       <p className="mb-2 text-center">or</p>
-      <Input type="url" placeholder="Preview Link" block />
+      <Input
+        type="url"
+        placeholder="Preview Link"
+        value={state.previewLink}
+        onChange={(e) =>
+          dispatch({ type: "PREVIEW_LINK", payload: e.target.value })
+        }
+        block
+      />
       <FormLabel>
         Demo Video{" "}
         <small className="text-gray-500 mt-1">

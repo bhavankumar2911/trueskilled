@@ -7,6 +7,7 @@ import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import path from "path";
 import auth from "./middlewares/auth";
+import projectRouter from "./routes/project";
 
 const app = express();
 
@@ -23,6 +24,7 @@ connection();
 // api routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/project", projectRouter);
 app.use("/api/auth", auth);
 
 // 404 api request

@@ -36,7 +36,7 @@ const ProjectList: FC<{ projects: unknown[]; editProject: boolean }> = ({
 );
 
 const Projects: FC = () => {
-  const { projects, username, name } = useUserContext();
+  const { projects, username, firstName } = useUserContext();
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
 
@@ -49,7 +49,7 @@ const Projects: FC = () => {
   // unauthorized
   if (!editProject) {
     if (projects.length == 0) {
-      Output = <p>{name} hasn't posted any projects</p>;
+      Output = <p>{firstName} hasn't posted any projects</p>;
     } else {
       Output = (
         <div>

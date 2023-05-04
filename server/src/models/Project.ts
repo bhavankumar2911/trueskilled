@@ -1,14 +1,16 @@
 import mongoose, { model, Schema } from "mongoose";
 
 const projectSchema = new Schema({
-  userId: String,
-  thumbnail: String,
   title: String,
+  description: String,
+  thumbnail: String,
   tags: [String],
+  repoLink: String,
+  previewLink: String,
+  video: String,
+  userId: String,
   upvotes: Number,
   comments: [String],
-  about: String,
-  video: String,
 });
 
 const Project = model("Project", projectSchema);
