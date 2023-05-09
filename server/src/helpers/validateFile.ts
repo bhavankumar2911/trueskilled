@@ -1,6 +1,11 @@
 import { Response } from "express";
 
-export default (file: Express.Multer.File, fileType: "image" | "video") => {
+export default (
+  file: Express.Multer.File,
+  fileType: "image" | "video",
+  emptyErrorMessage: string,
+  fileTypeErrorMessage: string
+) => {
   interface Validation {
     isValid: boolean;
     message: string;
@@ -17,7 +22,7 @@ export default (file: Express.Multer.File, fileType: "image" | "video") => {
   //   file not selected
   if (!file) {
     validation.isValid = false;
-    validation.message = "Kindly select a profile picture";
+    validation.message = emptyErrorMessage;
   } else {
     // file properties
     const mimetype = file.mimetype;
@@ -31,7 +36,7 @@ export default (file: Express.Multer.File, fileType: "image" | "video") => {
         !imageExtensions.includes(extension)
       )
         validation.isValid = false;
-      validation.message = "Only image files are allowed";
+      validation.message = fileTypeErrorMessage;
     }
     //   video validation
     else if ((fileType = "video")) {

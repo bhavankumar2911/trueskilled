@@ -8,7 +8,9 @@ import RequestWithMedia from "../interfaces/RequestWithMedia";
 const multerUploader = (
   folderName: "avatars" | "thumbnails" | "videos",
   fileName: string,
-  fileType: "image" | "video"
+  fileType: "image" | "video",
+  emptyErrorMessage: string,
+  fileTypeErrorMessage: string
 ) => {
   //   request handler
   const requestHandler: RequestHandler = async (
@@ -23,7 +25,9 @@ const multerUploader = (
       fileFilter: (req, file, cb) => {
         const { isValid, message } = validateFile(
           file as Express.Multer.File,
-          fileType
+          fileType,
+          emptyErrorMessage,
+          fileTypeErrorMessage
         );
 
         if (!isValid) {

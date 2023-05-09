@@ -68,7 +68,9 @@ export const updateUserInfo: RequestHandler = async (req, res, next) => {
     fileFilter: (req, file, cb) => {
       const { isValid, message } = validateFile(
         file as Express.Multer.File,
-        "image"
+        "image",
+        "Kindly select a profile picture",
+        "Only image files are allowed"
       );
 
       if (!isValid) {

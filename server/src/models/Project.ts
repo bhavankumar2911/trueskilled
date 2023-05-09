@@ -5,12 +5,14 @@ const projectSchema = new Schema({
   description: String,
   thumbnail: String,
   tags: [String],
-  repoLink: String,
+  repositoryLink: String,
   previewLink: String,
   video: String,
   userId: String,
   upvotes: Number,
-  comments: [String],
+  comments: [
+    { comment: String, username: String, userId: mongoose.Types.ObjectId },
+  ],
 });
 
 const Project = model("Project", projectSchema);

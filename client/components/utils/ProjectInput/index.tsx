@@ -3,6 +3,10 @@ import AddSkill from "../AddSkill";
 import Button from "../Button";
 import FormLabel from "../FormLabel";
 import Input from "../Input";
+import { useMutation } from "react-query";
+import useCurrentUserID from "../../../hooks/useCurrentUserID";
+import axios, { AxiosError } from "axios";
+import Error from "../Error";
 
 interface State {
   title: string;
@@ -86,6 +90,7 @@ const ProjectInput: FC<Props> = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   // const [localVideoLink, setLocalVideoLink] = useState("");
   const [video, setVideo] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const [state, dispatch] = useReducer(reducer, {
     title: title ? title : "",
@@ -96,6 +101,18 @@ const ProjectInput: FC<Props> = ({
     previewLink: previewLink ? previewLink : "",
     // demoVideo: demoVideo ? demoVideo : "",
   });
+  const userID = useCurrentUserID();
+
+  const { mutate } = useMutation(
+    (formData: FormData) => axios.post(`/project/${userID}`, formData),
+    {
+      onSuccess: (res) => console.log(res.data),
+      onError: (err) => {
+        if (err instanceof AxiosError)
+          setError(err.response?.data.error.message);
+      },
+    }
+  );
 
   const handleThumbnailSelect: React.ChangeEventHandler<HTMLInputElement> = (
     e
@@ -126,10 +143,22 @@ const ProjectInput: FC<Props> = ({
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     console.log(state);
+
+    const { title, description, repositoryLink, previewLink, tags } = state;
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("repositoryLink", repositoryLink);
+    formData.append("previewLink", previewLink);
+    formData.append("tags", JSON.stringify(tags));
+    formData.append("thumbnail", thumbnail as File);
+
+    mutate(formData);
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && <Error error={error} setError={setError} />}
       <Input
         type="text"
         placeholder="Project Title*"
@@ -152,6 +181,7 @@ const ProjectInput: FC<Props> = ({
         className="block text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-green-100 border border-primary file:text-sm file:font-semibold file:rounded-sm file:cursor-pointer 
       file:border-primary file:text-primary file:bg-transparent mb-4"
+        onChange={handleThumbnailSelect}
       />
       <FormLabel>Add related tags</FormLabel>
       {/* skill refers to tag here */}
