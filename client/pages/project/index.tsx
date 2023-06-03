@@ -1,28 +1,31 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import SingleProject from "../../components/project/SingleProject";
 import About from "../../components/user/About";
 import Info from "../../components/user/Info";
 import Navbar from "../../components/utils/Navbar";
 import Wrapper from "../../components/utils/Wrapper";
 import Project from "../../interfaces/Project";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { useRouter } from "next/router";
+import Loader from "../../components/utils/Loader";
 
 interface Action {
   type: "";
   payload: unknown;
 }
 
-const initialState: Project = {
-  title:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore molestiae",
-  description:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore molestiae dolores tenetur? Tempora omnis, voluptas suscipit ullam quas exercitationem aspernatur, dolorum praesentium architecto est accusamus esse tempore recusandae modi odit rem consequatur! Nulla enim quia non libero esse, incidunt aspernatur!",
-  tags: ["data science", "python", "sklearn", "numpy", "pytorch"],
-  demoVideo: "",
-  repositoryLink: "",
-  previewLink: "",
-  thumbnail:
-    "https://images.pexels.com/photos/1476321/pexels-photo-1476321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-};
+// const initialState: Project = {
+//   title: "",
+//   description: "",
+//   tags: [],
+//   video: "",
+//   repositoryLink: "",
+//   previewLink: "",
+//   thumbnail: "",
+//   upvotes: 0,
+//   comments: [],
+// };
 
 const reducer = (state: Project, action: Action) => {
   const { type, payload } = action;
@@ -34,7 +37,22 @@ const reducer = (state: Project, action: Action) => {
 };
 
 const Project = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [project, setProject] = useState<Project | null>(null);
+  const [fetchProject, setFetchProject] = useState(false);
+  const router = useRouter();
+  const { isLoading } = useQuery(
+    "project",
+    () => axios.get(`/project/single/${router.query.id}`),
+    {
+      enabled: fetchProject,
+      onSuccess: (res) => setProject({ ...res.data.project }),
+      onError: (err) => console.log(err),
+    }
+  );
+
+  useEffect(() => {
+    if (router.query.id) setFetchProject(true);
+  }, [router.query]);
 
   return (
     <main className="bg-gray-50 min-h-screen">
@@ -47,7 +65,11 @@ const Project = () => {
           </div>
 
           <div className="sm:col-span-1 md-lg:col-span-2 sm:bg-white rounded-sm sm:p-10 sm:shadow-gray-400/50 sm:shadow-2xl">
-            <SingleProject project={{ ...state }} />
+            {isLoading || !project ? (
+              <Loader />
+            ) : (
+              <SingleProject project={{ ...project }} />
+            )}
           </div>
         </div>
       </Wrapper>

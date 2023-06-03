@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 export default interface RequestWithMedia extends Request {
-  thumbnailURL?: string;
+  thumbnail?: string;
   userId?: string;
-  videoURL?: string;
+  demoVideo?: string;
 }

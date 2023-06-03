@@ -40,7 +40,6 @@ export const checkExistingUser = async (
       }
     }
   } catch (error) {
-    console.log("Cannot check existing user", error);
     result.error = true;
   } finally {
     return result;

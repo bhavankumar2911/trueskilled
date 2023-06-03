@@ -40,16 +40,18 @@ const multerUploader = (
     }).single(fileName);
 
     upload(req, res, async function (err) {
-      if (err) return next(createHttpError.InternalServerError());
+      console.log("uploader err => ", err);
+
+      if (err) return next(createHttpError.InternalServerError("here"));
 
       const file = req.file;
 
-      if (!file)
-        return next(createHttpError.BadRequest("Kindly select a thumbnail"));
+      if (!file) return next(createHttpError.BadRequest(emptyErrorMessage));
 
-      const thumbnailURL = `${process.env.SERVER_HOST}/public/thumbnails/${file.filename}`;
+      const url = `${process.env.SERVER_HOST}/public/${folderName}/${file.filename}`;
 
-      req.thumbnailURL = thumbnailURL;
+      if (fileName == "thumbnail") req.thumbnail = url;
+      else req.demoVideo = url;
 
       return next();
     });

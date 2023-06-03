@@ -14,7 +14,8 @@ const SingleProject: FC<{ project: Project }> = ({ project }) => {
     tags,
     repositoryLink,
     previewLink,
-    demoVideo,
+    video,
+    _id,
   } = project;
 
   return (
@@ -33,7 +34,11 @@ const SingleProject: FC<{ project: Project }> = ({ project }) => {
       <p className="mt-3 border-b pb-7 lg:pb-10">{description}</p>
 
       <h2 className="font-semibold text-lg mt-5 lg:mt-10">Links</h2>
-      <div className="flex items-center flex-wrap gap-5 mt-3 border-b pb-7 lg:pb-10 lg:mt-5">
+      <div
+        className={`flex items-center flex-wrap gap-5 mt-3 pb-7 lg:pb-10 lg:mt-5 ${
+          video ? "border-b" : ""
+        }`}
+      >
         <Button href={repositoryLink}>
           <RiGitRepositoryLine /> repository
         </Button>
@@ -43,11 +48,15 @@ const SingleProject: FC<{ project: Project }> = ({ project }) => {
         </Button>
       </div>
 
-      <h2 className="font-semibold text-lg mt-5">Working Video</h2>
+      {video && (
+        <>
+          <h2 className="font-semibold text-lg mt-5">Working Video</h2>
 
-      <video width="100%" className="mt-3 lg:mt-5" controls>
-        <source src="/video.mp4" type="video/mp4" />
-      </video>
+          <video width="100%" className="mt-3 lg:mt-5" controls>
+            <source src="/video.mp4" type="video/mp4" />
+          </video>
+        </>
+      )}
     </div>
   );
 };

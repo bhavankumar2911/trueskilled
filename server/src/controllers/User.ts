@@ -89,8 +89,6 @@ export const updateUserInfo: RequestHandler = async (req, res, next) => {
     const { firstName, lastName, username, skills } = requestData;
     const userId = req.params.id;
 
-    console.log("requestData ----->  ", requestData);
-
     // validation
     if (!firstName || !lastName || !username)
       return next(createHttpError.BadRequest("All fields are required"));

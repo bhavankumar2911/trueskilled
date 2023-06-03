@@ -7,6 +7,7 @@ import { useMutation } from "react-query";
 import useCurrentUserID from "../../../hooks/useCurrentUserID";
 import axios, { AxiosError } from "axios";
 import Error from "../Error";
+import { useUserContext } from "../../../providers/User";
 
 interface State {
   title: string;
@@ -20,6 +21,7 @@ interface State {
 
 interface Props {
   edit: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
   description?: string;
   tags?: string[];
@@ -79,6 +81,7 @@ const reducer = (state: State, action: Action) => {
 
 const ProjectInput: FC<Props> = ({
   edit,
+  setShowModal,
   title,
   description,
   tags,
@@ -86,11 +89,10 @@ const ProjectInput: FC<Props> = ({
   previewLink,
   demoVideo,
 }) => {
-  // const [localThumbnailLink, setLocalThumbnailLink] = useState("");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
-  // const [localVideoLink, setLocalVideoLink] = useState("");
-  const [video, setVideo] = useState<File | null>(null);
+  // const [video, setVideo] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { updateProjects, projects } = useUserContext();
 
   const [state, dispatch] = useReducer(reducer, {
     title: title ? title : "",
@@ -106,7 +108,10 @@ const ProjectInput: FC<Props> = ({
   const { mutate } = useMutation(
     (formData: FormData) => axios.post(`/project/${userID}`, formData),
     {
-      onSuccess: (res) => console.log(res.data),
+      onSuccess: (res) => {
+        updateProjects && updateProjects([res.data.project, ...projects]);
+        setShowModal(false);
+      },
       onError: (err) => {
         if (err instanceof AxiosError)
           setError(err.response?.data.error.message);
@@ -123,12 +128,12 @@ const ProjectInput: FC<Props> = ({
     }
   };
 
-  const handleVideoSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const tempFile = e.target.files[0];
-      setVideo(tempFile);
-    }
-  };
+  // const handleVideoSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const tempFile = e.target.files[0];
+  //     setVideo(tempFile);
+  //   }
+  // };
 
   const addTag = (tag: string) => {
     if (tag && !state.tags.includes(tag))
@@ -152,6 +157,7 @@ const ProjectInput: FC<Props> = ({
     formData.append("previewLink", previewLink);
     formData.append("tags", JSON.stringify(tags));
     formData.append("thumbnail", thumbnail as File);
+    // formData.append("demoVideo", video as File);
 
     mutate(formData);
   };
@@ -213,7 +219,7 @@ const ProjectInput: FC<Props> = ({
         }
         block
       />
-      <FormLabel>
+      {/* <FormLabel>
         Demo Video{" "}
         <small className="text-gray-500 mt-1">
           (Recommended for hardware projects)
@@ -224,7 +230,7 @@ const ProjectInput: FC<Props> = ({
         className="block text-sm text-slate-500
       file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-green-100 border border-primary file:text-sm file:font-semibold file:rounded-sm file:cursor-pointer 
       file:border-primary file:text-primary file:bg-transparent mb-4"
-      />
+      /> */}
 
       <Button block>Add</Button>
     </form>

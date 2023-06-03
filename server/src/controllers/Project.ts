@@ -2,9 +2,6 @@ import { RequestHandler } from "express";
 import Project from "../models/Project";
 import successfulResponse from "../helpers/successfulResponse";
 import createHttpError from "http-errors";
-import multer from "multer";
-import path from "path";
-import setupMulter from "../helpers/setupMulter";
 import RequestWithMedia from "../interfaces/RequestWithMedia";
 
 export const getProjects: RequestHandler = async (req, res, next) => {
@@ -26,8 +23,6 @@ export const createProject: RequestHandler = async (
 ) => {
   let { title, description, repositoryLink, previewLink, tags } = req.body;
 
-  console.log({ title, description, repositoryLink, previewLink, tags });
-
   // validation
   if (!title || !description)
     return next(createHttpError.BadRequest("Title and Description is needed"));
@@ -44,17 +39,52 @@ export const createProject: RequestHandler = async (
   Project.create({
     title,
     description,
-    thumbnail: req.thumbnailURL,
+    thumbnail: req.thumbnail,
     repositoryLink,
     previewLink,
     tags,
-    video: req.videoURL,
+    video: null,
     userId: req.userId,
-    upvotes: 0,
+    upvotes: [],
     comments: [],
   })
-    .then((response) => successfulResponse(res, { message: "Project created" }))
+    .then((response) =>
+      successfulResponse(res, { message: "Project created", project: response })
+    )
     .catch((error) => next(createHttpError.InternalServerError()));
 
   return;
+};
+
+export const getOneProject: RequestHandler = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const project = await Project.findOne({ _id: id });
+    return successfulResponse(res, { project });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+};
+
+export const voteProject: RequestHandler = async (req, res, next) => {
+  const { id } = req.params;
+  const { username } = req.body;
+
+  try {
+    const project = await Project.findById(id);
+
+    if (!project) return next(createHttpError.NotFound("Project not found"));
+
+    const newVoteList = project.upvotes.filter((user) => user !== username);
+
+    if (newVoteList.length == project.upvotes.length) {
+      newVoteList.push(username);
+    }
+
+    await Project.findByIdAndUpdate(id, { upvotes: newVoteList });
+    return successfulResponse(res, { upvotes: newVoteList });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
 };

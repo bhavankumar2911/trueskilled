@@ -11,8 +11,8 @@ import SectionTitle from "../SectionTitle";
 export interface IProject {
   title: string;
   thumbnail: string;
-  id: string;
-  upvotes: number;
+  _id: string;
+  upvotes: string[];
   comments: string[];
 }
 
@@ -22,8 +22,6 @@ const ProjectList: FC<{ projects: unknown[]; editProject: boolean }> = ({
 }) => (
   <ul className="flex justify-center w-full flex-col items-center gap-5 mt-10 sm:flex-row sm:flex-wrap md-lg:items-center md:gap-10">
     {projects.map((project, index) => {
-      console.log(project);
-
       return (
         <ProjectCard
           key={index}
@@ -39,8 +37,6 @@ const Projects: FC = () => {
   const { projects, username, firstName } = useUserContext();
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
-
-  console.log(projects);
 
   const editProject = user ? (user.username == username ? true : false) : false;
 
@@ -72,7 +68,7 @@ const Projects: FC = () => {
             showModal={showModal}
             setShowModal={setShowModal}
           >
-            <ProjectInput edit={true} />
+            <ProjectInput setShowModal={setShowModal} edit={true} />
           </Modal>
         </div>
       );
@@ -87,7 +83,7 @@ const Projects: FC = () => {
               showModal={showModal}
               setShowModal={setShowModal}
             >
-              <ProjectInput edit={true} />
+              <ProjectInput setShowModal={setShowModal} edit={true} />
             </Modal>
           </div>
           <ProjectList projects={projects} editProject={editProject} />

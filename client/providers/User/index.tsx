@@ -17,43 +17,17 @@ import { useRouter } from "next/router";
 export interface State extends User {
   avatar: string;
   updateAbout?(about: string): void;
+  updateProjects?(projects: unknown[]): void;
 }
 
 const initialUserState: State = {
-  firstName: "john",
-  lastName: "doe",
-  username: "johndoe",
-  avatar:
-    "https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-  skills: ["python", "java"],
-  projects: [
-    {
-      thumbnail:
-        "https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      title: "Lorem ipsum dolor sit amet.",
-      id: "1",
-      upvotes: 23,
-      comments: ["1", "2", "3"],
-    },
-    {
-      thumbnail:
-        "https://images.pexels.com/photos/4960464/pexels-photo-4960464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      id: "2",
-      upvotes: 90,
-      comments: ["1", "2"],
-    },
-    {
-      thumbnail:
-        "https://images.pexels.com/photos/1476321/pexels-photo-1476321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      title: "Lorem ipsum dolor sit amet.",
-      id: "2",
-      upvotes: 2,
-      comments: ["1", "2", "3", "4"],
-    },
-  ],
-  about:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero voluptatem debitis asperiores modi doloremque sunt voluptatibus illo hic nesciunt animi.",
+  firstName: "",
+  lastName: "",
+  username: "",
+  avatar: "",
+  skills: [],
+  projects: [],
+  about: "",
 };
 
 const UserContext = createContext<State>(initialUserState);
@@ -86,15 +60,8 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         dispatch({ type: "ABOUT", payload: bio });
         dispatch({ type: "PROJECTS", payload: projects });
         dispatch({ type: "AVATAR", payload: profilePicture });
-        console.log(
-          firstName,
-          lastName,
-          username,
-          skills,
-          bio,
-          projects,
-          profilePicture
-        );
+
+        console.log("fetched user projects => ", projects);
       },
       onError: (err) => {
         console.log("error ran");
@@ -110,6 +77,10 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     dispatch({ type: "ABOUT", payload: about });
   };
 
+  const updateProjects = (projects: unknown[]) => {
+    dispatch({ type: "PROJECTS", payload: projects });
+  };
+
   useEffect(() => {
     if (router.query.id) setFetchUser(true);
   }, [router.query]);
@@ -119,7 +90,7 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   if (isError) return null;
 
   return (
-    <UserContext.Provider value={{ ...state, updateAbout }}>
+    <UserContext.Provider value={{ ...state, updateAbout, updateProjects }}>
       {children}
     </UserContext.Provider>
   );

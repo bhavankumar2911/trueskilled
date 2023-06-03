@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { createProject, getProjects } from "../controllers/Project";
+import {
+  createProject,
+  getOneProject,
+  getProjects,
+  voteProject,
+} from "../controllers/Project";
 import auth from "../middlewares/auth";
 import multerUploader from "../helpers/multerUploader";
 
@@ -21,5 +26,9 @@ projectRouter.post(
   ),
   createProject
 );
+
+projectRouter.get("/single/:id", getOneProject);
+
+projectRouter.post("/vote/:id", auth, voteProject);
 
 export default projectRouter;

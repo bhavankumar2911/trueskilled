@@ -9,7 +9,7 @@ const projectSchema = new Schema({
   previewLink: String,
   video: String,
   userId: String,
-  upvotes: Number,
+  upvotes: [String],
   comments: [
     { comment: String, username: String, userId: mongoose.Types.ObjectId },
   ],

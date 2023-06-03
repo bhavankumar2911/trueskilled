@@ -38,7 +38,6 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const {} = useQuery("user-auth", authenticateUser, {
     onError: (err) => {
       if (err instanceof AxiosError) {
-        console.log(err.response?.data.error.status);
         if (err.response?.data.error.status == 401) {
           dispatch({ type: "AUTH", payload: { loggedIn: false, user: null } });
         }

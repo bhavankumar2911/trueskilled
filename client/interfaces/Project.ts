@@ -4,6 +4,9 @@ export default interface Project {
   tags: string[];
   repositoryLink: string;
   previewLink: string;
-  demoVideo: string;
+  video: string;
   thumbnail: string;
+  upvotes: string[];
+  comments: string[];
+  _id: string;
 }

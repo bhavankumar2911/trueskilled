@@ -14,7 +14,6 @@ export default async (data: SignupData, passwordHash: string) => {
 
     return user;
   } catch (error) {
-    console.log("Cannot save user in DB", error);
     return false;
   }
 };

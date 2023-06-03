@@ -4,6 +4,10 @@ import React, { FC } from "react";
 import { BsTriangle } from "react-icons/bs";
 import { IProject } from "../Projects";
 import { FaRegComment } from "react-icons/fa";
+import { useMutation } from "react-query";
+import axios from "axios";
+import { useAppContext } from "../../../providers/App";
+import unauthorizedHandler from "../../../helpers/unauthorizedHandler";
 
 export interface IProps {
   project: IProject;
@@ -12,13 +16,29 @@ export interface IProps {
 }
 
 const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
+  const { user } = useAppContext();
+  const { mutate } = useMutation(
+    () => {
+      console.log("liking");
+      return axios.post(`/project/vote/${project._id}`, {
+        username: user?.username,
+      });
+    },
+    {
+      onSuccess: (res) => console.log(res),
+      onError: (err) => {
+        unauthorizedHandler(err);
+      },
+    }
+  );
+
   return (
     <li
       className={`flex flex-col h-[270px] justify-between border pb-3 mt-5 first:m-0 hover:scale-105 hover:drop-shadow-2xl transition-all w-full md:mt-0 max-w-[250px] rounded-sm overflow-hidden hover:bg-green-50 hover:border-primary ${
         className ? className : ""
       }`}
     >
-      <Link href={`/project/${project.id}`}>
+      <Link href={`/project?id=${project._id}`}>
         <div className="relative h-[150px]">
           <Image
             src={project.thumbnail}
@@ -36,9 +56,12 @@ const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
         </div>
       </Link>
       <div className="flex items-center justify-between px-3 border-t pt-2">
-        <span className="flex items-center gap-1 text-sm cursor-pointer">
+        <span
+          onClick={() => mutate()}
+          className="flex items-center gap-1 text-sm cursor-pointer"
+        >
           <BsTriangle />
-          <span>{project.upvotes}</span>
+          <span>{project.upvotes.length}</span>
         </span>
         <span className="flex items-center gap-1 text-sm cursor-pointer">
           <span>{project.comments.length}</span> <FaRegComment />
