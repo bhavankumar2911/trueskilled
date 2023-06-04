@@ -8,6 +8,7 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import { useAppContext } from "../../../providers/App";
 import unauthorizedHandler from "../../../helpers/unauthorizedHandler";
+import { useUserContext } from "../../../providers/User";
 
 export interface IProps {
   project: IProject;
@@ -17,15 +18,24 @@ export interface IProps {
 
 const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
   const { user } = useAppContext();
+  const { projects, updateProjects } = useUserContext();
   const { mutate } = useMutation(
     () => {
-      console.log("liking");
       return axios.post(`/project/vote/${project._id}`, {
         username: user?.username,
       });
     },
     {
-      onSuccess: (res) => console.log(res),
+      onSuccess: (res) => {
+        const tempProjects = [...projects];
+
+        tempProjects.map((tempProject) => {
+          if ((tempProject as IProject)._id == project._id)
+            (tempProject as IProject).upvotes = [...res.data.upvotes];
+        });
+
+        updateProjects && updateProjects([...tempProjects]);
+      },
       onError: (err) => {
         unauthorizedHandler(err);
       },
