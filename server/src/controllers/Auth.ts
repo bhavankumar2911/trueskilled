@@ -16,7 +16,6 @@ import deleteFile from "../helpers/deleteFile";
 import deleteOldAvatar from "../services/auth/deleteOldAvatar";
 import validateLoginData from "../services/auth/validateLoginData";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { TokenConfig } from "../config";
 import signToken from "../services/auth/signToken";
 import saveRefreshToken from "../services/auth/saveRefreshToken";
@@ -55,42 +54,6 @@ export const signup: RequestHandler = async (req, res, next) => {
 
 // complete profile controller
 export const completeProfile: RequestHandler = async (req, res, next) => {
-  // var storage = multer.diskStorage({
-  //   destination: function (req, file, cb) {
-  //     cb(null, path.join(__dirname, "..", "..", "public", "avatars"));
-  //   },
-  //   filename: function (req, file, cb) {
-  //     cb(null, Date.now() + "-" + file.originalname);
-  //   },
-  // });
-
-  // var upload = multer({
-  //   storage: storage,
-  //   fileFilter: (req, file, cb) => {
-  //     const { isValid, message } = validateFile(
-  //       file as Express.Multer.File,
-  //       "image"
-  //     );
-
-  //     if (!isValid) {
-  //       cb(null, false);
-  //       return next(createHttpError.BadRequest(message));
-  //     }
-
-  //     return cb(null, true);
-  //   },
-  // }).single("profilePicture");
-
-  // upload(req, res, function (err) {
-  //   const file = req.file;
-
-  //   let { isValid, message } = validateFile(
-  //     file as Express.Multer.File,
-  //     "image"
-  //   );
-
-  //   if (!isValid) return next(createHttpError.BadRequest(message));
-
   const data = req.body;
   const id = req.params.id;
 

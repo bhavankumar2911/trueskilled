@@ -3,6 +3,8 @@ import Project from "../models/Project";
 import successfulResponse from "../helpers/successfulResponse";
 import createHttpError from "http-errors";
 import RequestWithMedia from "../interfaces/RequestWithMedia";
+import RequestWithUser from "../interfaces/RequestWithUser";
+import { Types } from "mongoose";
 
 export const getProjects: RequestHandler = async (req, res, next) => {
   const { userId } = req.params;
@@ -84,6 +86,33 @@ export const voteProject: RequestHandler = async (req, res, next) => {
 
     await Project.findByIdAndUpdate(id, { upvotes: newVoteList });
     return successfulResponse(res, { upvotes: newVoteList });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+};
+
+export const addComment: RequestHandler = async (
+  req: RequestWithUser,
+  res,
+  next
+) => {
+  const { id: projectId } = req.params;
+  const { userId } = req;
+  const { comment, username } = req.body;
+
+  try {
+    const project = await Project.findById(projectId);
+
+    if (!project) return next(createHttpError.NotFound("Project not found"));
+
+    project.comments.push({
+      comment: comment,
+      userId: userId,
+      username: username,
+      time: Date.now(),
+    });
+
+    return successfulResponse(res, { comments: project.comments });
   } catch (error) {
     return next(createHttpError.InternalServerError());
   }

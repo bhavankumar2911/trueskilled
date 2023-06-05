@@ -11,7 +11,12 @@ const projectSchema = new Schema({
   userId: String,
   upvotes: [String],
   comments: [
-    { comment: String, username: String, userId: mongoose.Types.ObjectId },
+    {
+      comment: String,
+      username: String,
+      userId: String,
+      time: Number,
+    },
   ],
 });
 
