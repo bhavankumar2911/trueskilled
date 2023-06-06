@@ -5,6 +5,8 @@ import Button from "../../utils/Button";
 import ItemBadges from "../../utils/ItemBadges";
 import { RiGitRepositoryLine } from "react-icons/ri";
 import { MdRemoveRedEye } from "react-icons/md";
+import Input from "../../utils/Input";
+import CommentsList from "../commentsList";
 
 const SingleProject: FC<{ project: Project }> = ({ project }) => {
   const {
@@ -35,17 +37,22 @@ const SingleProject: FC<{ project: Project }> = ({ project }) => {
 
       <h2 className="font-semibold text-lg mt-5 lg:mt-10">Links</h2>
       <div
-        className={`flex items-center flex-wrap gap-5 mt-3 pb-7 lg:pb-10 lg:mt-5 ${
-          video ? "border-b" : ""
-        }`}
+        className={`flex items-center flex-wrap gap-5 mt-3 pb-7 lg:pb-10 lg:mt-5 border-b`}
       >
-        <Button href={repositoryLink}>
-          <RiGitRepositoryLine /> repository
-        </Button>
+        {repositoryLink ? (
+          <Button href={repositoryLink}>
+            <RiGitRepositoryLine /> repository
+          </Button>
+        ) : (
+          <Button href={previewLink}>
+            <MdRemoveRedEye /> preview
+          </Button>
+        )}
+      </div>
 
-        <Button>
-          <MdRemoveRedEye /> preview
-        </Button>
+      <h2 className="font-semibold text-lg mt-5 lg:mt-10">Comments</h2>
+      <div className="mt-3 border-b pb-7 lg:pb-10">
+        <CommentsList project={project} />
       </div>
 
       {video && (

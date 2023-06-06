@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  addComment,
   createProject,
   getOneProject,
   getProjects,
@@ -30,5 +31,7 @@ projectRouter.post(
 projectRouter.get("/single/:id", getOneProject);
 
 projectRouter.post("/vote/:id", auth, voteProject);
+
+projectRouter.post("/comment/:id", auth, addComment);
 
 export default projectRouter;

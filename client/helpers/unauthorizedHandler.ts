@@ -1,9 +1,7 @@
 import { AxiosError } from "axios";
 
 export default (err: unknown) => {
-  console.log("called");
-
-  if (err instanceof AxiosError && err.response && err.response.status) {
+  if (err instanceof AxiosError && err.response && err.response.status == 401) {
     console.log(err.response?.status);
     window.location.href = "/login";
   }

@@ -5,6 +5,7 @@ import createHttpError from "http-errors";
 import RequestWithMedia from "../interfaces/RequestWithMedia";
 import RequestWithUser from "../interfaces/RequestWithUser";
 import { Types } from "mongoose";
+import User from "../models/User";
 
 export const getProjects: RequestHandler = async (req, res, next) => {
   const { userId } = req.params;
@@ -63,7 +64,14 @@ export const getOneProject: RequestHandler = async (req, res, next) => {
 
   try {
     const project = await Project.findOne({ _id: id });
-    return successfulResponse(res, { project });
+
+    if (!project) return next(createHttpError.NotFound("Project not found"));
+    // returning user with project
+    const user = await User.find({ _id: project.userId }).select("-password");
+
+    return successfulResponse(res, {
+      project: { ...project.toJSON(), user: user[0] },
+    });
   } catch (error) {
     return next(createHttpError.InternalServerError());
   }
@@ -99,6 +107,8 @@ export const addComment: RequestHandler = async (
   const { id: projectId } = req.params;
   const { userId } = req;
   const { comment, username } = req.body;
+
+  if (!comment) return next(createHttpError.BadRequest("Enter a comment"));
 
   try {
     const project = await Project.findById(projectId);

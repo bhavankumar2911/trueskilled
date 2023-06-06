@@ -10,8 +10,8 @@ const UserPageLayout: FC = () => {
       <Wrapper>
         <div className="sm:grid sm:grid-cols-2 sm:gap-10 md-lg:grid-cols-3">
           <div className="sm:col-span-1 md-lg:col-span-1">
-            <Info />
-            <About />
+            <Info externalData={false} />
+            <About externalData={false} />
           </div>
 
           <div className="sm:col-span-1 md-lg:col-span-2">

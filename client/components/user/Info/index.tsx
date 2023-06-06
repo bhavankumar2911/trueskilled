@@ -5,13 +5,27 @@ import Avatar from "../../utils/Avatar";
 import Modal from "../../utils/Modal";
 import EditInfo from "../EditInfo";
 import SectionCard from "../SectionCard";
+import User from "../../../interfaces/User";
 
-const InfoCard: FC = () => {
-  const { firstName, lastName, username, skills, avatar } = useUserContext();
+interface Props {
+  externalData: boolean;
+  user?: User;
+}
+
+const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
+  let { firstName, lastName, username, skills, profilePicture } =
+    useUserContext();
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
 
-  console.log(avatar);
+  // if data passed as props - other than user profile page
+  if (externalData && propUser) {
+    firstName = propUser.firstName;
+    lastName = propUser.lastName;
+    username = propUser.username;
+    skills = propUser.skills;
+    profilePicture = propUser.profilePicture;
+  }
 
   const editAccount = user ? (user.username == username ? true : false) : false;
 
@@ -27,10 +41,10 @@ const InfoCard: FC = () => {
           lastName={lastName}
           username={username}
           skills={skills}
-          avatar={avatar}
+          avatar={profilePicture}
         />
       </Modal>
-      <Avatar src={avatar} />
+      <Avatar src={profilePicture} />
       <h2 className="font-bold text-xl">{`${firstName} ${lastName}`}</h2>
       <p className="text-gray-500 text-sm">@{username}</p>
       <ul className="flex flex-wrap gap-2 mt-5 justify-center">

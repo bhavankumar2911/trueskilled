@@ -3,6 +3,7 @@ export default interface IProps {
   lastName: string;
   username: string;
   skills: string[];
-  about: string;
+  bio: string;
   projects: unknown[];
+  profilePicture: string;
 }

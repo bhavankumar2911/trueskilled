@@ -15,7 +15,7 @@ import Loader from "../../components/utils/Loader";
 import { useRouter } from "next/router";
 
 export interface State extends User {
-  avatar: string;
+  profilePicture: string;
   updateAbout?(about: string): void;
   updateProjects?(projects: unknown[]): void;
 }
@@ -24,10 +24,10 @@ const initialUserState: State = {
   firstName: "",
   lastName: "",
   username: "",
-  avatar: "",
+  profilePicture: "",
   skills: [],
   projects: [],
-  about: "",
+  bio: "",
 };
 
 const UserContext = createContext<State>(initialUserState);

@@ -19,13 +19,13 @@ export interface IState {
 const initialAppState: IState = {
   loggedIn: false,
   user: {
-    firstName: "john",
-    lastName: "doe",
-    username: "johndoe",
-    skills: ["python", "java"],
+    firstName: "",
+    lastName: "",
+    username: "",
+    skills: [],
     projects: [],
-    about:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero voluptatem debitis asperiores modi doloremque sunt voluptatibus illo hic nesciunt animi.",
+    bio: "",
+    profilePicture: "",
   },
 };
 
