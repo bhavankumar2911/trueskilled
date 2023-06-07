@@ -7,11 +7,14 @@ import axios, { AxiosError } from "axios";
 import { useAppContext } from "../../../providers/App";
 import unauthorizedHandler from "../../../helpers/unauthorizedHandler";
 import Error from "../../utils/Error";
+import SingleComment from "../SingleComment";
+import Comment from "../../../interfaces/Comment";
 
 const CommentsList: FC<{ project: Project }> = ({ project }) => {
   const { loggedIn, user } = useAppContext();
   const [comment, setComment] = useState("");
   const [error, setError] = useState<null | string>(null);
+  const [projectState, setProjectState] = useState(project);
 
   const { mutate } = useMutation(
     (comment: string) =>
@@ -20,7 +23,10 @@ const CommentsList: FC<{ project: Project }> = ({ project }) => {
         username: user?.username,
       }),
     {
-      onSuccess: (res) => console.log(res.data),
+      onSuccess: (res) => {
+        setProjectState({ ...projectState, comments: [...res.data.comments] });
+        setComment("");
+      },
       onError: (err) => {
         console.log(err);
 
@@ -41,35 +47,43 @@ const CommentsList: FC<{ project: Project }> = ({ project }) => {
         </p>
       )}
 
-      <ul>
-        {project.comments.length != 0 && "comments"}
-
-        {loggedIn ? (
-          <form
-            className="mt-5"
-            onSubmit={(e) => {
-              e.preventDefault();
-              mutate(comment);
-            }}
-          >
-            <Input
-              placeholder="Add comment here.."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              textarea
-              block
+      {project.comments.length != 0 && (
+        <ul>
+          {projectState.comments.map((comment: Comment, index) => (
+            <SingleComment
+              editable={comment.username == user?.username}
+              comment={comment}
+              key={index}
             />
-            <Button type="submit">Add</Button>
-          </form>
-        ) : (
-          <div className="text-center mt-10">
-            <p>You must log in to post a comment</p>
-            <Button className="mt-5" href="/login">
-              Log in
-            </Button>
-          </div>
-        )}
-      </ul>
+          ))}
+        </ul>
+      )}
+
+      {loggedIn ? (
+        <form
+          className="mt-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            mutate(comment);
+          }}
+        >
+          <Input
+            placeholder="Add comment here.."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            textarea
+            block
+          />
+          <Button type="submit">Add</Button>
+        </form>
+      ) : (
+        <div className="text-center mt-10">
+          <p>You must log in to post a comment</p>
+          <Button className="mt-5" href="/login">
+            Log in
+          </Button>
+        </div>
+      )}
     </section>
   );
 };

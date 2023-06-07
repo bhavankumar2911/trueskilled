@@ -115,14 +115,22 @@ export const addComment: RequestHandler = async (
 
     if (!project) return next(createHttpError.NotFound("Project not found"));
 
-    project.comments.push({
+    let tempComments = project.comments;
+
+    tempComments.unshift({
       comment: comment,
       userId: userId,
       username: username,
       time: Date.now(),
     });
 
-    return successfulResponse(res, { comments: project.comments });
+    // save again in db
+    await Project.updateOne(
+      { _id: projectId },
+      { comments: [...tempComments] }
+    );
+
+    return successfulResponse(res, { comments: [...tempComments] });
   } catch (error) {
     return next(createHttpError.InternalServerError());
   }

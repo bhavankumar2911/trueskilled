@@ -1,3 +1,5 @@
+import Comment from "./Comment";
+
 export default interface Project {
   title: string;
   description: string;
@@ -7,6 +9,6 @@ export default interface Project {
   video: string;
   thumbnail: string;
   upvotes: string[];
-  comments: string[];
+  comments: Comment[];
   _id: string;
 }
