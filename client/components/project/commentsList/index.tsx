@@ -24,6 +24,8 @@ const CommentsList: FC<{ project: Project }> = ({ project }) => {
       }),
     {
       onSuccess: (res) => {
+        console.log(res.data.comments);
+
         setProjectState({ ...projectState, comments: [...res.data.comments] });
         setComment("");
       },
@@ -53,7 +55,7 @@ const CommentsList: FC<{ project: Project }> = ({ project }) => {
             <SingleComment
               editable={comment.username == user?.username}
               comment={comment}
-              key={index}
+              key={comment._id}
             />
           ))}
         </ul>

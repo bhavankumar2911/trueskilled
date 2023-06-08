@@ -122,6 +122,7 @@ export const addComment: RequestHandler = async (
       userId: userId,
       username: username,
       time: Date.now(),
+      projectId,
     });
 
     // save again in db
@@ -131,6 +132,50 @@ export const addComment: RequestHandler = async (
     );
 
     return successfulResponse(res, { comments: [...tempComments] });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+};
+
+const deleteComment: RequestHandler = async (
+  req: RequestWithUser,
+  res,
+  next
+) => {
+  const { id } = req.params; // project id
+
+  // fetch comment
+  try {
+    const project = await Project.findById(id);
+
+    if (!project) return next(createHttpError.NotFound("Project not found"));
+
+    const { commentId } = req.body;
+
+    const length = project.comments.length;
+    let newComments = [];
+    let notAuthorized = false;
+    let found = false;
+
+    for (let i = 0; i < length; i += 1) {
+      const comment = project.comments[i];
+
+      if (comment._id == commentId) {
+        found = true;
+        if (comment.userId !== req.userId) {
+          notAuthorized = true;
+          break;
+        }
+      } else {
+        newComments.push(comment);
+      }
+    }
+
+    if (!found) return next(createHttpError.NotFound("Comment not found"));
+    if (notAuthorized)
+      return next(createHttpError.Unauthorized("You're not authorized"));
+
+    return successfulResponse(res, { comments: newComments });
   } catch (error) {
     return next(createHttpError.InternalServerError());
   }

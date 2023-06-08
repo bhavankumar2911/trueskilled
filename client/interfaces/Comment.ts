@@ -3,4 +3,5 @@ export default interface Comment {
   userId: string;
   username: string;
   time: number;
+  _id: string;
 }

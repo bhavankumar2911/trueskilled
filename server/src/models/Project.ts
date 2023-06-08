@@ -16,6 +16,8 @@ const projectSchema = new Schema({
       username: String,
       userId: String,
       time: Number,
+      projectId: String,
+      _id: mongoose.Types.ObjectId,
     },
   ],
 });
