@@ -180,3 +180,41 @@ const deleteComment: RequestHandler = async (
     return next(createHttpError.InternalServerError());
   }
 };
+
+const editComment: RequestHandler = async (req: RequestWithUser, res, next) => {
+  const { id } = req.params; // project id
+
+  try {
+    const project = await Project.findById(id);
+
+    if (!project) return next(createHttpError.NotFound("Project not found"));
+
+    const { commentId, comment: newComment } = req.body;
+
+    const length = project.comments.length;
+    // let newComments = [];
+    let notAuthorized = false;
+    let found = false;
+
+    const newComments = project.comments.map((comment) => {
+      if (comment._id == commentId) {
+        found = true;
+        if (comment.userId !== req.userId) {
+          notAuthorized = true;
+        }
+
+        comment.comment = newComment;
+
+        return comment;
+      } else return comment;
+    });
+
+    if (!found) return next(createHttpError.NotFound("Comment not found"));
+    if (notAuthorized)
+      return next(createHttpError.Unauthorized("You're not authorized"));
+
+    return successfulResponse(res, { comments: newComments });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+};
