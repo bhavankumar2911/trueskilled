@@ -56,6 +56,8 @@ const CommentsList: FC<{ project: Project }> = ({ project }) => {
               editable={comment.username == user?.username}
               comment={comment}
               key={comment._id}
+              project={projectState}
+              setProject={setProjectState}
             />
           ))}
         </ul>

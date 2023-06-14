@@ -137,7 +137,7 @@ export const addComment: RequestHandler = async (
   }
 };
 
-const deleteComment: RequestHandler = async (
+export const deleteComment: RequestHandler = async (
   req: RequestWithUser,
   res,
   next
@@ -150,11 +150,13 @@ const deleteComment: RequestHandler = async (
 
     if (!project) return next(createHttpError.NotFound("Project not found"));
 
-    const { commentId } = req.body;
+    const { commentId } = req.query;
+
+    console.log(commentId);
 
     const length = project.comments.length;
     let newComments = [];
-    let notAuthorized = false;
+    let notAuthorized = true;
     let found = false;
 
     for (let i = 0; i < length; i += 1) {
@@ -162,9 +164,13 @@ const deleteComment: RequestHandler = async (
 
       if (comment._id == commentId) {
         found = true;
-        if (comment.userId !== req.userId) {
-          notAuthorized = true;
-          break;
+
+        console.log("id in comment => ", comment.userId);
+        console.log("id in req => ", req.userId);
+
+        if (comment.userId == req.userId) {
+          notAuthorized = false;
+          continue;
         }
       } else {
         newComments.push(comment);
@@ -175,13 +181,18 @@ const deleteComment: RequestHandler = async (
     if (notAuthorized)
       return next(createHttpError.Unauthorized("You're not authorized"));
 
+    await Project.findByIdAndUpdate(id, { comments: newComments });
     return successfulResponse(res, { comments: newComments });
   } catch (error) {
     return next(createHttpError.InternalServerError());
   }
 };
 
-const editComment: RequestHandler = async (req: RequestWithUser, res, next) => {
+export const editComment: RequestHandler = async (
+  req: RequestWithUser,
+  res,
+  next
+) => {
   const { id } = req.params; // project id
 
   try {
@@ -191,16 +202,15 @@ const editComment: RequestHandler = async (req: RequestWithUser, res, next) => {
 
     const { commentId, comment: newComment } = req.body;
 
-    const length = project.comments.length;
     // let newComments = [];
-    let notAuthorized = false;
+    let notAuthorized = true;
     let found = false;
 
     const newComments = project.comments.map((comment) => {
       if (comment._id == commentId) {
         found = true;
-        if (comment.userId !== req.userId) {
-          notAuthorized = true;
+        if (comment.userId == req.userId) {
+          notAuthorized = false;
         }
 
         comment.comment = newComment;
@@ -211,7 +221,9 @@ const editComment: RequestHandler = async (req: RequestWithUser, res, next) => {
 
     if (!found) return next(createHttpError.NotFound("Comment not found"));
     if (notAuthorized)
-      return next(createHttpError.Unauthorized("You're not authorized"));
+      return next(createHttpError.Unauthorized("You're not authorized here"));
+
+    await Project.findByIdAndUpdate(id, { comments: newComments });
 
     return successfulResponse(res, { comments: newComments });
   } catch (error) {

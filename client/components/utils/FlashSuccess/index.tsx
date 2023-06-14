@@ -11,7 +11,7 @@ const FlashSuccess: FC<{
   }, []);
 
   return (
-    <div className="bg-green-50 border-green-500 border text-green-500 text-center py-2 fixed top-10 w-1/2 left-1/2 -translate-x-1/2 rounded-sm">
+    <div className="bg-green-50 border-green-500 border text-green-500 text-center py-2 fixed top-10 w-1/2 left-1/2 -translate-x-1/2 rounded-sm z-20">
       <span>{success}</span>
     </div>
   );

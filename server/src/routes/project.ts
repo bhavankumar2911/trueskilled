@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   addComment,
   createProject,
+  deleteComment,
+  editComment,
   getOneProject,
   getProjects,
   voteProject,
@@ -33,5 +35,9 @@ projectRouter.get("/single/:id", getOneProject);
 projectRouter.post("/vote/:id", auth, voteProject);
 
 projectRouter.post("/comment/:id", auth, addComment);
+
+projectRouter.delete("/comment/:id", auth, deleteComment);
+
+projectRouter.patch("/comment/:id", auth, editComment);
 
 export default projectRouter;
