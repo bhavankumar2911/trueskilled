@@ -32,7 +32,7 @@ const About: FC<Props> = ({ externalData, user: propUser }) => {
         setShowModal={setShowModal}
         title="Edit About"
       >
-        <EditAbout about={bio} setShowModal={setShowModal} />
+        <EditAbout bio={bio} setShowModal={setShowModal} />
       </Modal>
       <SectionTitle>About</SectionTitle>
       <p className="text-center">{bio}</p>

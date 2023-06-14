@@ -140,27 +140,6 @@ const CompleteProfile = () => {
             </h2>
             <FormError isError={isError} error={error as Error} />
 
-            {/* <div className="flex flex-col items-center sm:flex-row">
-              <div className="w-[100px] h-[100px] rounded-full overflow-hidden mb-4 relative">
-                <Image
-                  src={localFileLink ? localFileLink : Avatar}
-                  alt="avatar"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="mb-4 flex items-center sm:ml-10">
-                <FormLabel className="mr-2 mt-1">Profile picture</FormLabel>
-                <input
-                  name="file"
-                  type="file"
-                  className="block text-sm text-slate-500
-      file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-green-100 border border-primary file:text-sm file:font-semibold file:rounded-sm file:cursor-pointer 
-      file:border-primary file:text-primary file:bg-transparent w-[105px]"
-                  onChange={handleFileSelect}
-                />
-              </div>
-            </div> */}
             <FormLabel>Choose a username</FormLabel>
             <Input
               name="username"

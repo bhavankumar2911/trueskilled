@@ -8,12 +8,12 @@ import FlashSuccess from "../../utils/FlashSuccess";
 import { useUserContext } from "../../../providers/User";
 
 interface Props {
-  about: string;
+  bio: string;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EditAbout: FC<Props> = ({ about, setShowModal }) => {
-  const [newAbout, setNewAbout] = useState(about);
+const EditAbout: FC<Props> = ({ bio, setShowModal }) => {
+  const [newAbout, setNewAbout] = useState(bio);
   const currentUserID = useCurrentUserID();
   const [success, setSuccess] = useState("");
   const { updateAbout } = useUserContext();

@@ -34,7 +34,7 @@ export default (state: State, action: Action) => {
     case "AVATAR":
       return {
         ...state,
-        avatar: payload as string,
+        profilePicture: payload as string,
       };
     case "SKILLS":
       return {
@@ -44,7 +44,7 @@ export default (state: State, action: Action) => {
     case "ABOUT":
       return {
         ...state,
-        about: payload as string,
+        bio: payload as string,
       };
     case "PROJECTS":
       return {

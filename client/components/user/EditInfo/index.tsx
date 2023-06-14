@@ -15,7 +15,7 @@ interface Props {
   lastName: string;
   username: string;
   skills: string[];
-  avatar: string;
+  profilePicture: string;
 }
 
 interface State extends Props {
@@ -53,7 +53,7 @@ const reducer = (state: State, action: Action) => {
     case "EDIT_SKILL":
       return { ...state, skill: payload as string };
     case "CHANGE_AVATAR":
-      return { ...state, avatar: payload as string };
+      return { ...state, profilePicture: payload as string };
     case "FIRSTNAME":
       return { ...state, firstName: payload as string };
     case "LASTNAME":
@@ -76,7 +76,7 @@ const EditInfo: FC<Props> = ({
   lastName,
   username,
   skills,
-  avatar,
+  profilePicture,
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     firstName,
@@ -84,7 +84,7 @@ const EditInfo: FC<Props> = ({
     username,
     skills,
     skill: "",
-    avatar,
+    profilePicture,
   });
   const [file, setFile] = useState<File | null>(null);
   const { mutate } = useMutation(updateInfo, {
@@ -116,11 +116,6 @@ const EditInfo: FC<Props> = ({
     data.append("lastName", state.lastName);
     data.append("username", state.username);
     data.append("skills", JSON.stringify(state.skills));
-    console.log(data.get("avatar"));
-    console.log(data.get("firstName"));
-    console.log(data.get("lastName"));
-    console.log(data.get("username"));
-    console.log(data.get("skills"));
 
     mutate(data);
   };
@@ -142,7 +137,11 @@ const EditInfo: FC<Props> = ({
       <form onSubmit={handleFormSubmit}>
         <div className="mb-5">
           <center>
-            <Avatar src={state.avatar ? state.avatar : AvatarPlaceholder} />
+            <Avatar
+              src={
+                state.profilePicture ? state.profilePicture : AvatarPlaceholder
+              }
+            />
             <div className="mb-4 justify-center flex items-center sm:ml-10">
               <FormLabel className="mr-2 mt-1">Change photo</FormLabel>
               <input

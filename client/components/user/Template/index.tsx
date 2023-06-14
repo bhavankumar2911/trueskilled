@@ -3,8 +3,15 @@ import Wrapper from "../../utils/Wrapper";
 import About from "../About";
 import Info from "../Info";
 import Projects from "../Projects";
+import { useUserContext } from "../../../providers/User";
 
 const UserPageLayout: FC = () => {
+  let { bio, username } = useUserContext();
+
+  console.log("from template");
+  console.log(bio);
+  console.log(username);
+
   return (
     <main className="bg-gray-50 min-h-screen">
       <Wrapper>

@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 
 export interface State extends User {
   profilePicture: string;
-  updateAbout?(about: string): void;
+  updateAbout?(bio: string): void;
   updateProjects?(projects: unknown[]): void;
 }
 
@@ -61,7 +61,13 @@ const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         dispatch({ type: "PROJECTS", payload: projects });
         dispatch({ type: "AVATAR", payload: profilePicture });
 
-        console.log("fetched user projects => ", projects);
+        console.log("fetched details");
+        console.log(firstName);
+        console.log(lastName);
+        console.log(username);
+        console.log(skills);
+        console.log(bio);
+        console.log(profilePicture);
       },
       onError: (err) => {
         console.log("error ran");

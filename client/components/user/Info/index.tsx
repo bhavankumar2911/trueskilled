@@ -18,6 +18,10 @@ const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
 
+  console.log("before");
+  console.log(firstName, lastName, username, skills, profilePicture);
+  console.log(profilePicture);
+
   // if data passed as props - other than user profile page
   if (externalData && propUser) {
     firstName = propUser.firstName;
@@ -26,6 +30,10 @@ const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
     skills = propUser.skills;
     profilePicture = propUser.profilePicture;
   }
+
+  console.log("after");
+  console.log(firstName, lastName, username, skills, profilePicture);
+  console.log(profilePicture);
 
   const editAccount = user ? (user.username == username ? true : false) : false;
 
@@ -41,7 +49,7 @@ const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
           lastName={lastName}
           username={username}
           skills={skills}
-          avatar={profilePicture}
+          profilePicture={profilePicture}
         />
       </Modal>
       <Avatar src={profilePicture} />
