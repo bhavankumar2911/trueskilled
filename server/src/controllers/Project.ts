@@ -18,6 +18,16 @@ export const getProjects: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const getAllProjects: RequestHandler = async (req, res, next) => {
+  try {
+    const projects = await Project.find();
+
+    return successfulResponse(res, { projects });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
+};
+
 // add new project
 export const createProject: RequestHandler = async (
   req: RequestWithMedia,

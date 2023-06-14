@@ -7,14 +7,7 @@ import ProjectInput from "../../utils/ProjectInput";
 import ProjectCard from "../ProjectCard";
 import SectionCard from "../SectionCard";
 import SectionTitle from "../SectionTitle";
-
-export interface IProject {
-  title: string;
-  thumbnail: string;
-  _id: string;
-  upvotes: string[];
-  comments: string[];
-}
+import Project from "../../../interfaces/Project";
 
 const ProjectList: FC<{ projects: unknown[]; editProject: boolean }> = ({
   projects,
@@ -25,7 +18,7 @@ const ProjectList: FC<{ projects: unknown[]; editProject: boolean }> = ({
       return (
         <ProjectCard
           key={index}
-          project={project as IProject}
+          project={project as Project}
           editProject={editProject}
         />
       );

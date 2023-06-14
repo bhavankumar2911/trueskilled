@@ -4,6 +4,7 @@ import {
   createProject,
   deleteComment,
   editComment,
+  getAllProjects,
   getOneProject,
   getProjects,
   voteProject,
@@ -15,6 +16,8 @@ const projectRouter = Router();
 
 // fetch projects of a user
 projectRouter.get("/:userId", getProjects);
+
+projectRouter.get("/", getAllProjects);
 
 // create project
 projectRouter.post(

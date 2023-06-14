@@ -2,16 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { FC } from "react";
 import { BsTriangle } from "react-icons/bs";
-import { IProject } from "../Projects";
 import { FaRegComment } from "react-icons/fa";
 import { useMutation } from "react-query";
 import axios from "axios";
 import { useAppContext } from "../../../providers/App";
 import unauthorizedHandler from "../../../helpers/unauthorizedHandler";
 import { useUserContext } from "../../../providers/User";
+import Project from "../../../interfaces/Project";
 
 export interface IProps {
-  project: IProject;
+  project: Project;
   editProject: boolean;
   className?: string;
 }
@@ -30,8 +30,8 @@ const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
         const tempProjects = [...projects];
 
         tempProjects.map((tempProject) => {
-          if ((tempProject as IProject)._id == project._id)
-            (tempProject as IProject).upvotes = [...res.data.upvotes];
+          if ((tempProject as Project)._id == project._id)
+            (tempProject as Project).upvotes = [...res.data.upvotes];
         });
 
         updateProjects && updateProjects([...tempProjects]);
