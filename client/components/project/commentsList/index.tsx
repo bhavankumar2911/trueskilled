@@ -43,13 +43,13 @@ const CommentsList: FC<{ project: Project }> = ({ project }) => {
     <section>
       {error && <Error error={error as string} setError={setError} />}
 
-      {!project.comments.length && (
+      {!projectState.comments.length && (
         <p className="text-center text-gray-400">
           Be the first one to comment on this project!
         </p>
       )}
 
-      {project.comments.length != 0 && (
+      {projectState.comments.length != 0 && (
         <ul>
           {projectState.comments.map((comment: Comment, index) => (
             <SingleComment

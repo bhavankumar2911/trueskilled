@@ -14,9 +14,17 @@ export interface IProps {
   project: Project;
   editProject: boolean;
   className?: string;
+  setProjects?: React.Dispatch<React.SetStateAction<never[]>>;
+  propProjects?: never[];
 }
 
-const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
+const ProjectCard: FC<IProps> = ({
+  project,
+  editProject,
+  className,
+  setProjects,
+  propProjects,
+}) => {
   const { user } = useAppContext();
   const { projects, updateProjects } = useUserContext();
   const { mutate } = useMutation(
@@ -35,6 +43,17 @@ const ProjectCard: FC<IProps> = ({ project, editProject, className }) => {
         });
 
         updateProjects && updateProjects([...tempProjects]);
+
+        if (propProjects && setProjects) {
+          const tempProjects = [...propProjects];
+
+          tempProjects.map((tempProject) => {
+            if ((tempProject as Project)._id == project._id)
+              (tempProject as Project).upvotes = [...res.data.upvotes];
+          });
+
+          setProjects && setProjects([...(tempProjects as never)]);
+        }
       },
       onError: (err) => {
         unauthorizedHandler(err);

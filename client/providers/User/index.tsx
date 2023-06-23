@@ -28,6 +28,7 @@ const initialUserState: State = {
   skills: [],
   projects: [],
   bio: "",
+  _id: "",
 };
 
 const UserContext = createContext<State>(initialUserState);
