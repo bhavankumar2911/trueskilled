@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   completeProfile,
   login,
+  logout,
   signup,
   uploadAvatar,
 } from "../controllers/Auth";
@@ -19,5 +20,8 @@ authRouter.post("/upload-avatar/:id", uploadAvatar);
 
 // login user
 authRouter.post("/login", login);
+
+// logout
+authRouter.post("/logout", logout);
 
 export default authRouter;

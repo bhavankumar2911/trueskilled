@@ -3,8 +3,10 @@ import React from "react";
 import Button from "../../utils/Button";
 import Wrapper from "../../utils/Wrapper";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { useAppContext } from "../../../providers/App";
 
 const Hero = () => {
+  const { loggedIn, user } = useAppContext();
   return (
     <section>
       <Wrapper className="border-b md:flex md:items-center md:flex-row-reverse">
@@ -26,7 +28,10 @@ const Hero = () => {
             <b>TrueSkilled</b>, you can prove your skills by posting your
             projects.
           </p>
-          <Button className="mt-5 !uppercase">
+          <Button
+            href={loggedIn ? `/user?id=${user?._id}` : "/login"}
+            className="mt-5 !uppercase"
+          >
             start posting
             <FaLongArrowAltRight className="translate-y-[1px]" />
           </Button>

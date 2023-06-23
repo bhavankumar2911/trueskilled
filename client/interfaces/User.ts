@@ -6,4 +6,5 @@ export default interface IProps {
   bio: string;
   projects: unknown[];
   profilePicture: string;
+  _id: string;
 }

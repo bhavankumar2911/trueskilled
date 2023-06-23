@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Project } from "../../../pages/projects";
+import Project from "../../../interfaces/Project";
 import ProjectCard from "../../user/ProjectCard";
 
 interface Props {

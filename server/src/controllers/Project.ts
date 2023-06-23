@@ -6,6 +6,7 @@ import RequestWithMedia from "../interfaces/RequestWithMedia";
 import RequestWithUser from "../interfaces/RequestWithUser";
 import { Types } from "mongoose";
 import User from "../models/User";
+import { v4 as uuidv4 } from "uuid";
 
 export const getProjects: RequestHandler = async (req, res, next) => {
   const { userId } = req.params;
@@ -133,6 +134,7 @@ export const addComment: RequestHandler = async (
       username: username,
       time: Date.now(),
       projectId,
+      _id: uuidv4(),
     });
 
     // save again in db
@@ -162,15 +164,16 @@ export const deleteComment: RequestHandler = async (
 
     const { commentId } = req.query;
 
-    console.log(commentId);
-
     const length = project.comments.length;
     let newComments = [];
     let notAuthorized = true;
     let found = false;
 
+    console.log("comment id --> ", commentId);
+
     for (let i = 0; i < length; i += 1) {
       const comment = project.comments[i];
+      console.log(comment._id);
 
       if (comment._id == commentId) {
         found = true;

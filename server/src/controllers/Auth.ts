@@ -20,6 +20,8 @@ import { TokenConfig } from "../config";
 import signToken from "../services/auth/signToken";
 import saveRefreshToken from "../services/auth/saveRefreshToken";
 import { IUser } from "../interfaces/IUser";
+import RequestWithUser from "../interfaces/RequestWithUser";
+import RefreshToken from "../models/RefreshToken";
 
 if (process.env.NODE_ENV == "development") config();
 
@@ -208,7 +210,7 @@ export const login: RequestHandler = async (req, res, next) => {
     maxAge: 2 * 60 * 1000,
   });
 
-  const { firstName, lastName, bio, username, profilePicture, skills } =
+  const { firstName, lastName, bio, username, profilePicture, skills, _id } =
     user as IUser;
 
   // user = {firstName, lastName, bio, username, profilePicture, skills}
@@ -220,6 +222,7 @@ export const login: RequestHandler = async (req, res, next) => {
     username,
     profilePicture,
     skills,
+    _id,
     email: user?.email,
   };
 
@@ -229,4 +232,23 @@ export const login: RequestHandler = async (req, res, next) => {
     id: user ? user.id : "",
     user: userWithoutPassword,
   });
+};
+
+export const logout: RequestHandler = async (
+  req: RequestWithUser,
+  res,
+  next
+) => {
+  const { userId } = req;
+
+  res.clearCookie("access_token");
+  res.clearCookie("refresh_token");
+
+  try {
+    await RefreshToken.findOneAndDelete({ id: userId });
+
+    return successfulResponse(res, { message: "Logout successful!" });
+  } catch (error) {
+    return next(createHttpError.InternalServerError());
+  }
 };

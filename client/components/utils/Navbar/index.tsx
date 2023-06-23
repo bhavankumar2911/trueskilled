@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import Logo from "../Logo";
-import { BiMenuAltRight } from "react-icons/bi";
+import { BiLogInCircle, BiLogOutCircle, BiMenuAltRight } from "react-icons/bi";
 import Wrapper from "../Wrapper";
 import { HiOutlineHome } from "react-icons/hi2";
 import { GrClose } from "react-icons/gr";
 import NavLink from "../NavLink";
 import { BiUser } from "react-icons/bi";
+import { useRouter } from "next/router";
+import { useAppContext } from "../../../providers/App";
+import { useMutation } from "react-query";
+import axios from "axios";
 
 const Navbar = () => {
   const [showLinks, setShowLinks] = useState(false);
+  const { loggedIn, user } = useAppContext();
+  const router = useRouter();
+  const { resetAppState } = useAppContext();
+  const { mutate: logout } = useMutation(() => axios.post(`/auth/logout`), {
+    onSuccess: () => {
+      router.push("/");
+      resetAppState && resetAppState();
+    },
+  });
 
   return (
     <>
@@ -45,12 +58,32 @@ const Navbar = () => {
                   </span>
                   <span>home</span>
                 </NavLink>
-                <NavLink href="/user">
-                  <span>
-                    <BiUser />
-                  </span>
-                  <span>profile</span>
-                </NavLink>
+                {loggedIn ? (
+                  <>
+                    {router.pathname == "/user" ? (
+                      <NavLink href={`/user?id=${user?._id}`}>
+                        <span>
+                          <BiLogOutCircle />
+                        </span>
+                        <span onClick={() => logout()}>Logout</span>
+                      </NavLink>
+                    ) : (
+                      <NavLink href={`/user?id=${user?._id}`}>
+                        <span>
+                          <BiUser />
+                        </span>
+                        <span>profile</span>
+                      </NavLink>
+                    )}
+                  </>
+                ) : (
+                  <NavLink href="/login">
+                    <span>
+                      <BiLogInCircle />
+                    </span>
+                    <span>Login</span>
+                  </NavLink>
+                )}
               </ul>
             </div>
             {/* mobile bottom */}
@@ -66,12 +99,32 @@ const Navbar = () => {
                   </span>
                   <span>home</span>
                 </NavLink>
-                <NavLink href="/user">
-                  <span>
-                    <BiUser />
-                  </span>
-                  <span>profile</span>
-                </NavLink>
+                {loggedIn ? (
+                  <>
+                    {router.pathname == "/user" ? (
+                      <NavLink href={`/user?id=${user?._id}`}>
+                        <span>
+                          <BiLogOutCircle />
+                        </span>
+                        <span onClick={() => logout()}>Logout</span>
+                      </NavLink>
+                    ) : (
+                      <NavLink href={`/user?id=${user?._id}`}>
+                        <span>
+                          <BiUser />
+                        </span>
+                        <span>profile</span>
+                      </NavLink>
+                    )}
+                  </>
+                ) : (
+                  <NavLink href="/login">
+                    <span>
+                      <BiLogInCircle />
+                    </span>
+                    <span>Login</span>
+                  </NavLink>
+                )}
               </ul>
             </div>
           </div>

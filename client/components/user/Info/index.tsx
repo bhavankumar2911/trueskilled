@@ -6,6 +6,7 @@ import Modal from "../../utils/Modal";
 import EditInfo from "../EditInfo";
 import SectionCard from "../SectionCard";
 import User from "../../../interfaces/User";
+import Link from "next/link";
 
 interface Props {
   externalData: boolean;
@@ -13,14 +14,10 @@ interface Props {
 }
 
 const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
-  let { firstName, lastName, username, skills, profilePicture } =
+  let { firstName, lastName, username, skills, profilePicture, _id } =
     useUserContext();
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
-
-  console.log("before");
-  console.log(firstName, lastName, username, skills, profilePicture);
-  console.log(profilePicture);
 
   // if data passed as props - other than user profile page
   if (externalData && propUser) {
@@ -29,11 +26,8 @@ const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
     username = propUser.username;
     skills = propUser.skills;
     profilePicture = propUser.profilePicture;
+    _id = propUser._id;
   }
-
-  console.log("after");
-  console.log(firstName, lastName, username, skills, profilePicture);
-  console.log(profilePicture);
 
   const editAccount = user ? (user.username == username ? true : false) : false;
 
@@ -53,7 +47,9 @@ const InfoCard: FC<Props> = ({ externalData, user: propUser }) => {
         />
       </Modal>
       <Avatar src={profilePicture} />
-      <h2 className="font-bold text-xl">{`${firstName} ${lastName}`}</h2>
+      <h2 className="font-bold text-xl">
+        <Link href={`/user?id=${_id}`}>{`${firstName} ${lastName}`}</Link>
+      </h2>
       <p className="text-gray-500 text-sm">@{username}</p>
       <ul className="flex flex-wrap gap-2 mt-5 justify-center">
         {skills.map((skill, index) => (

@@ -27,6 +27,8 @@ const SingleComment: FC<Props> = ({
   const [showModal, setShowModal] = useState(false);
   const [commentState, setCommentState] = useState(comment);
 
+  console.log(comment);
+
   const { mutate: deleteComment } = useMutation(
     () =>
       axios.delete(`/project/comment/${project._id}?commentId=${comment._id}`),

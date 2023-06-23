@@ -18,14 +18,20 @@ const TopProjects = () => {
       </h2>
       {isLoading && <Loader className="h-[50px] mt-10" />}
       <ul className="flex justify-center w-full flex-col items-center gap-10 mt-7 sm:flex-row sm:flex-wrap md-lg:items-center md:gap-10 md:mt-10">
-        {data?.data.projects.map((project: Project, index: number) => (
-          <ProjectCard
-            className="!m-0"
-            key={index}
-            project={project}
-            editProject={false}
-          />
-        ))}
+        {data?.data.projects.length == 0 ? (
+          <p>Be the first to post a project and get noticed 😎</p>
+        ) : (
+          <>
+            {data?.data.projects.map((project: Project, index: number) => (
+              <ProjectCard
+                className="!m-0"
+                key={index}
+                project={project}
+                editProject={false}
+              />
+            ))}
+          </>
+        )}
       </ul>
       {/* <div className="flex justify-center mt-10">
         <Button href="/projects?page=1">

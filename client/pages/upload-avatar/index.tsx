@@ -23,7 +23,7 @@ const UploadAvatar = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const { error, isError, mutate } = useMutation(uploadFile, {
-    onSuccess: () => router.push(`/user?id=${router.query.id}`),
+    onSuccess: () => router.push(`/login`),
   });
 
   const handleFileSelect: React.ChangeEventHandler<HTMLInputElement> = (e) => {

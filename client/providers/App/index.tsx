@@ -14,6 +14,7 @@ export interface IState {
   loggedIn: boolean;
   user: null | User;
   setAppUser?: (user: User) => void;
+  resetAppState?: () => void;
 }
 
 const initialAppState: IState = {
@@ -26,6 +27,7 @@ const initialAppState: IState = {
     projects: [],
     bio: "",
     profilePicture: "",
+    _id: "",
   },
 };
 
@@ -65,8 +67,17 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
       },
     });
 
+  const resetAppState = () =>
+    dispatch({
+      type: "AUTH",
+      payload: {
+        loggedIn: false,
+        user: null,
+      },
+    });
+
   return (
-    <AppContext.Provider value={{ ...state, setAppUser }}>
+    <AppContext.Provider value={{ ...state, setAppUser, resetAppState }}>
       {children}
     </AppContext.Provider>
   );

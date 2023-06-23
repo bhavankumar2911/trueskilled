@@ -41,8 +41,10 @@ const Projects: FC = () => {
       Output = <p>{firstName} hasn't posted any projects</p>;
     } else {
       Output = (
-        <div>
-          <SectionTitle>Projects</SectionTitle>
+        <div className="w-full">
+          <div className="flex justify-between items-start w-full mb-2 flex-wrap">
+            <SectionTitle>Projects</SectionTitle>
+          </div>
           <ProjectList projects={projects} editProject={editProject} />
         </div>
       );

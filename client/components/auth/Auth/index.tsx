@@ -41,8 +41,8 @@ const signupForm: SignupState = {
 };
 
 const loginForm: LoginState = {
-  email: "bhavan@gmail.com",
-  password: "pass",
+  email: "",
+  password: "",
 };
 
 const signupReducer = (
